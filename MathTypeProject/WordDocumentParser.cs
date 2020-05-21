@@ -8,7 +8,7 @@ using System.IO;
 
 namespace MathTypeProject
 {
-    internal class WordDocumentParser
+    internal class WordDocumentParser : OfficeDocumentParser
     {
         private string inputFilePath;
         Microsoft.Office.Interop.Word.Application app;
@@ -26,6 +26,10 @@ namespace MathTypeProject
         public void findMathTypeEquations()
         {
 
+        }
+        public void parse()
+        {
+            this.mathTypeEquations = null;
         }
     }
 }

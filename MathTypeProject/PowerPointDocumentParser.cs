@@ -8,7 +8,7 @@ using System.IO;
 
 namespace MathTypeProject
 {
-    internal class PowerPointDocumentParser
+    internal class PowerPointDocumentParser : OfficeDocumentParser
     {
         private string inputFilePath;
         Microsoft.Office.Interop.PowerPoint.Application app;
@@ -26,6 +26,10 @@ namespace MathTypeProject
         public void findMathTypeEquations()
         {
 
+        }
+        public void parse()
+        {
+            this.mathTypeEquations = null;
         }
     }
 }
