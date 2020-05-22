@@ -21,7 +21,7 @@ namespace MathTypeProject
                 case 2:
                     ExcelDocumentParser document2 = new ExcelDocumentParser(inputFilePath);
                     document2.findMathTypeEquations();
-
+                    Console.WriteLine("tadam!");
                     break;
 
                 case 3:
@@ -36,7 +36,10 @@ namespace MathTypeProject
 
                     break;
             }
+            while (true)
+            {
 
+            }
 
 
 
