@@ -12,7 +12,8 @@ namespace MathTypeProject
 {
     internal class WordDocumentParser : OfficeDocumentParser
     {
-        private string inputFilePath;
+        private string inputFileDir;
+        private string inputFileName;
         Microsoft.Office.Interop.Word.Application app;
         Microsoft.Office.Interop.Word.Document docOpen;
         public List<Object> mathTypeEquations = new List<Object>();
@@ -21,11 +22,17 @@ namespace MathTypeProject
 
         public WordDocumentParser(string inputFilePath)
         {
-            this.inputFilePath = inputFilePath;
+            char[] separator = { '\\' };
+            string[] directories = inputFilePath.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            string dir = "";
+            for(int i = 0; i < directories.Length-1; i++)
+            {
+                dir += directories[i] + '\\';
+            }
+            this.inputFileDir = dir;
+            this.inputFileName = directories[directories.Length - 1];
             this.app = new Word.Application();
-            this.docOpen = app.Documents.Open(this.inputFilePath);
-            //int start = 0;
-            //int stop = 40;
+            this.docOpen = app.Documents.Open(inputFilePath);
             this.myRange = docOpen.Range();
 
             object isVisible = true;
@@ -37,103 +44,103 @@ namespace MathTypeProject
 
         public void findMathTypeEquations()
         {
-
-
-            try
+            Thread staThread = new Thread(
+            delegate ()
             {
-                Word.Range endRange = docOpen.Range(myRange.End-1, myRange.End-1);
-                
-                int ShapesCount = myRange.ShapeRange.Count;
-                Console.WriteLine(ShapesCount);
-                int InlineShapesCount = myRange.InlineShapes.Count;
-                Console.WriteLine(InlineShapesCount);
-                int OMathsCount = myRange.OMaths.Count;
-                Console.WriteLine(OMathsCount);
-
-                if (OMathsCount > 0)
+                try
                 {
-                    using (System.IO.StreamWriter file =
-                            new System.IO.StreamWriter(@"C:\Users\Piotrek\Documents\WriteLines2.txt"))
+                    String clipboard_memory = Clipboard.GetText();
+                    Word.Range endRange = docOpen.Range(myRange.End - 1, myRange.End - 1);
+
+                    int OMathsCount = myRange.OMaths.Count;
+                    Console.WriteLine(OMathsCount);
+
+                    if (OMathsCount > 0)
                     {
-                        for (int i = 1; i <= OMathsCount; i++)
+                        string temp_file_path = this.inputFileDir + @"\EquationTemporaryFile.txt";
+                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(temp_file_path))
                         {
-                            //myRange.OMaths[i].ConvertToNormalText();
-                            Word.OMath currentShape = myRange.OMaths[i];
+                            for (int i = 1; i <= OMathsCount; i++)
+                            {
+                                //myRange.OMaths[i].ConvertToNormalText();
+                                Word.OMath currentEquation = myRange.OMaths[i];
+
+                                currentEquation.Range.Select();
+
+                                currentEquation.Range.TextRetrievalMode.IncludeHiddenText = true;
+                                currentEquation.Range.TextRetrievalMode.IncludeFieldCodes = true;
+
+                                // @Diagnostic
+                                currentEquation.Range.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
+
+                                currentEquation.Range.Application.Selection.Copy();
 
 
-                            Word.WdOMathType typeOfCurrentShape = currentShape.Type;
+                                String tekst = Clipboard.GetText();
+                                /////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-                            currentShape.Range.Select();
-
-
-
-                            currentShape.Range.TextRetrievalMode.IncludeHiddenText = true;
-                            currentShape.Range.TextRetrievalMode.IncludeFieldCodes = true;
-                            string type = currentShape.Range.TextRetrievalMode.ViewType.ToString();
-
-                            string equation = currentShape.Range.Text;
-
-                            currentShape.Range.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
-                            currentShape.Range.Application.Selection.Copy();
-                            endRange.Select();
-                            endRange.Application.Selection.Paste();
-
-
-                            currentShape.Range.Select();
-                            currentShape.Range.Application.Selection.Copy();
-
-                            IDataObject idat = null;
-                            Exception threadEx = null;
-                            Thread staThread = new Thread(
-                                delegate ()
+                                char[] tokens = tekst.ToCharArray();
+                                string[] parsed = parseTokensToMSEq(tokens);
+                                foreach(string p in parsed)
                                 {
-                                    try
-                                    {
-                                        String tekst = Clipboard.GetText();
-                                        Console.WriteLine(tekst);
-                                        file.WriteLine(tekst);
-                                    }
-
-                                    catch (Exception ex)
-                                    {
-                                        threadEx = ex;
-                                    }
-                                });
-                            staThread.SetApartmentState(ApartmentState.STA);
-                            staThread.Start();
-                            staThread.Join();
-
-                            
+                                    Console.WriteLine(p);
+                                }
+                                Console.WriteLine("koniec");
 
 
-                            
+                                /////////////////////////////////////////////////////////////////////////////////////
+                                file.WriteLine(tekst);
+                                if (clipboard_memory.CompareTo("") != 0)
+                                {
+                                    Clipboard.SetText(clipboard_memory);
+                                }
+                                else
+                                {
+                                    Clipboard.Clear();
+                                }
 
-
-                            
-
+                            }
                         }
-
-
                     }
+                    else
+                    {
+                        MessageBox.Show("No equations found.");
+                    }
+
+                    MessageBox.Show("Process Completed");
                 }
+                catch (Exception)
+                {
+                    throw;
+                }
+            });
+            staThread.SetApartmentState(ApartmentState.STA);
+            staThread.Start();
+            staThread.Join();
 
-                //MessageBox.Show("Process Completed");
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            
         }
-        public void parse()
+        private string[] parseTokensToMSEq(char[] tokens)
         {
-            this.mathTypeEquations = null;
+            int iterator = 0;
+            string[] new_tokens = new string[tokens.Length];
+
+            while(iterator < tokens.Length)
+            {
+                switch (tokens[iterator])
+                {
+                    case '√':
+                        new_tokens[iterator] = @"\sqrt{";
+                        break;
+                    default:
+                        new_tokens[iterator] = tokens[iterator].ToString();
+                        break;
+                }
+                iterator++;
+            }
+            return new_tokens;
         }
 
+        public void parse() {}
         
     }
 }

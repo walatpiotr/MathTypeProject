@@ -12,19 +12,25 @@ namespace MathTypeProject
         {
             Console.WriteLine("Insert document path: \n");
             string inputFilePath = Console.ReadLine();
-            Console.WriteLine("Write 1 if Word document: \nWrite 2 if Excel document: \nWrite 3 if PowerPoint document: \n");
-            string fileTypeString = Console.ReadLine();
-            int fileType = int.Parse(fileTypeString);
+            char[] separator = { '\\' };
+            char[] separator2 = { '.' };
+            string[] directories = inputFilePath.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            string[] filename_extension = directories[directories.Length - 1].Split(separator2);
+            //Console.WriteLine("Write 1 if Word document: \nWrite 2 if Excel document: \nWrite 3 if PowerPoint document: \n");
+            //string fileTypeString = Console.ReadLine();
+            //int fileType = int.Parse(fileTypeString);
 
-            switch (fileType)
+            switch (filename_extension[1])
             {
-                case 2:
+                case "ppt":
+                case "pptx":
                     ExcelDocumentParser document2 = new ExcelDocumentParser(inputFilePath);
                     document2.findMathTypeEquations();
                     Console.WriteLine("tadam!");
                     break;
 
-                case 3:
+                case "xls":
+                case "xlsx":
                     PowerPointDocumentParser document3 = new PowerPointDocumentParser(inputFilePath);
                     document3.findMathTypeEquations();
 
