@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Word = Microsoft.Office.Interop.Word;
 using System.IO;
+using System.Windows.Forms;
 
 namespace MathTypeProject
 {
@@ -22,9 +23,9 @@ namespace MathTypeProject
             this.inputFilePath = inputFilePath;
             this.app = new Word.Application();
             this.docOpen = app.Documents.Open(this.inputFilePath);
-            int start = 0;
-            int stop = 40;
-            this.myRange = docOpen.Range(start,stop);
+            //int start = 0;
+            //int stop = 40;
+            this.myRange = docOpen.Range();
 
             object isVisible = true;
             File.SetAttributes(inputFilePath, FileAttributes.Normal);
@@ -39,32 +40,56 @@ namespace MathTypeProject
 
             try
             {
-                int inlineShapesCount = myRange.InlineShapes.Count;
-                Console.WriteLine(inlineShapesCount);
+                Word.Range endRange = docOpen.Range(myRange.End-1, myRange.End-1);
+                
+                int ShapesCount = myRange.ShapeRange.Count;
+                Console.WriteLine(ShapesCount);
+                int InlineShapesCount = myRange.InlineShapes.Count;
+                Console.WriteLine(InlineShapesCount);
+                int OMathsCount = myRange.OMaths.Count;
+                Console.WriteLine(OMathsCount);
 
-                if (inlineShapesCount > 0)
+                if (OMathsCount > 0)
                 {
-                    for (int i = 1; i <= inlineShapesCount; i++)
+                    for (int i = 1; i <= OMathsCount; i++)
                     {
-                        Word.InlineShape currentShape = myRange.InlineShapes[i];
-                        Word.Range currentShapeRange = currentShape.Range;
-                        Word.WdInlineShapeType typeOfCurrentShape = currentShape.Type;
+                        myRange.OMaths[i].ConvertToNormalText();
+                        Word.OMath currentShape = myRange.OMaths[i];
+                        
+                        
+                        Word.WdOMathType typeOfCurrentShape = currentShape.Type;
 
-                        if (typeOfCurrentShape != Word.WdInlineShapeType.wdInlineShapeEmbeddedOLEObject)
-                        {
-                            continue;
-                            Console.WriteLine("Jestem w innym obiekcie niz chcemy");
-                        }
 
-                        if (!currentShape.Field.Code.Text.Trim().ToLower().Contains("equation"))
-                        {
-                            continue;
-                            Console.WriteLine("equation");
 
-                        }
 
-                        currentShapeRange.Select();
-                        currentShapeRange.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
+                        currentShape.Range.Select();
+
+                        
+
+                        currentShape.Range.TextRetrievalMode.IncludeHiddenText = true;
+                        currentShape.Range.TextRetrievalMode.IncludeFieldCodes = true;
+                        string type = currentShape.Range.TextRetrievalMode.ViewType.ToString();
+
+                        string equation = currentShape.Range.Text;
+                        
+                        currentShape.Range.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
+                        currentShape.Range.Application.Selection.Copy();
+                        endRange.Select();
+                        endRange.Application.Selection.Paste();
+
+
+                        currentShape.Range.Select();
+                        currentShape.Range.Application.Selection.Copy();
+
+                        String tekst = Clipboard.GetText(TextDataFormat.Text);
+                        Console.WriteLine(tekst);
+
+
+
+
+
+
+
                     }
                 }
 
