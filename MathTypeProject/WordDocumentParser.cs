@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Word = Microsoft.Office.Interop.Word;
 using System.IO;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace MathTypeProject
 {
@@ -51,43 +52,69 @@ namespace MathTypeProject
 
                 if (OMathsCount > 0)
                 {
-                    for (int i = 1; i <= OMathsCount; i++)
+                    using (System.IO.StreamWriter file =
+                            new System.IO.StreamWriter(@"C:\Users\Piotrek\Documents\WriteLines2.txt"))
                     {
-                        myRange.OMaths[i].ConvertToNormalText();
-                        Word.OMath currentShape = myRange.OMaths[i];
-                        
-                        
-                        Word.WdOMathType typeOfCurrentShape = currentShape.Type;
+                        for (int i = 1; i <= OMathsCount; i++)
+                        {
+                            //myRange.OMaths[i].ConvertToNormalText();
+                            Word.OMath currentShape = myRange.OMaths[i];
+
+
+                            Word.WdOMathType typeOfCurrentShape = currentShape.Type;
 
 
 
 
-                        currentShape.Range.Select();
-
-                        
-
-                        currentShape.Range.TextRetrievalMode.IncludeHiddenText = true;
-                        currentShape.Range.TextRetrievalMode.IncludeFieldCodes = true;
-                        string type = currentShape.Range.TextRetrievalMode.ViewType.ToString();
-
-                        string equation = currentShape.Range.Text;
-                        
-                        currentShape.Range.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
-                        currentShape.Range.Application.Selection.Copy();
-                        endRange.Select();
-                        endRange.Application.Selection.Paste();
-
-
-                        currentShape.Range.Select();
-                        currentShape.Range.Application.Selection.Copy();
-
-                        String tekst = Clipboard.GetText(TextDataFormat.Text);
-                        Console.WriteLine(tekst);
+                            currentShape.Range.Select();
 
 
 
+                            currentShape.Range.TextRetrievalMode.IncludeHiddenText = true;
+                            currentShape.Range.TextRetrievalMode.IncludeFieldCodes = true;
+                            string type = currentShape.Range.TextRetrievalMode.ViewType.ToString();
+
+                            string equation = currentShape.Range.Text;
+
+                            currentShape.Range.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
+                            currentShape.Range.Application.Selection.Copy();
+                            endRange.Select();
+                            endRange.Application.Selection.Paste();
 
 
+                            currentShape.Range.Select();
+                            currentShape.Range.Application.Selection.Copy();
+
+                            IDataObject idat = null;
+                            Exception threadEx = null;
+                            Thread staThread = new Thread(
+                                delegate ()
+                                {
+                                    try
+                                    {
+                                        String tekst = Clipboard.GetText();
+                                        Console.WriteLine(tekst);
+                                        file.WriteLine(tekst);
+                                    }
+
+                                    catch (Exception ex)
+                                    {
+                                        threadEx = ex;
+                                    }
+                                });
+                            staThread.SetApartmentState(ApartmentState.STA);
+                            staThread.Start();
+                            staThread.Join();
+
+                            
+
+
+                            
+
+
+                            
+
+                        }
 
 
                     }
