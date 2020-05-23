@@ -1,6 +1,6 @@
 ﻿namespace MathTypeProject
 {
-    partial class Form1
+    partial class EquationToLaTeXConverter
     {
         /// <summary>
         /// Required designer variable.
@@ -37,19 +37,19 @@
             // button1
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.button1.Location = new System.Drawing.Point(370, 0);
+            this.button1.Location = new System.Drawing.Point(359, 0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 252);
+            this.button1.Size = new System.Drawing.Size(75, 161);
             this.button1.TabIndex = 0;
             this.button1.Text = "Convert";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(ConvertButton_Click);
+            this.button1.Click += new System.EventHandler(this.ConvertButton_Click);
             // 
             // textBox1
             // 
             this.textBox1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.textBox1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-            this.textBox1.Location = new System.Drawing.Point(12, 58);
+            this.textBox1.Location = new System.Drawing.Point(12, 69);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(247, 20);
             this.textBox1.TabIndex = 1;
@@ -58,34 +58,37 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 42);
+            this.label1.Location = new System.Drawing.Point(9, 92);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(157, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Please insert or choose file path";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(265, 58);
+            this.button2.Location = new System.Drawing.Point(265, 69);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 20);
             this.button2.TabIndex = 3;
             this.button2.Text = "Browse";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(BrowseButton_Click);
+            this.button2.Click += new System.EventHandler(this.BrowseButton_Click);
             // 
-            // Form1
+            // EquationToLaTeXConverter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(445, 252);
+            this.ClientSize = new System.Drawing.Size(434, 161);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.MaximumSize = new System.Drawing.Size(450, 200);
+            this.MinimumSize = new System.Drawing.Size(450, 200);
+            this.Name = "EquationToLaTeXConverter";
+            this.Text = "EquationToLaTeXConverter";
             this.ResumeLayout(false);
             this.PerformLayout();
 

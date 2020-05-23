@@ -9,7 +9,7 @@ namespace MathTypeProject
 {
     class FileTypeChooser
     {
-        string filePathFromWinForm;
+        
         public FileTypeChooser(string arg)
         {
             //Console.WriteLine("Insert document path: \n");
@@ -44,10 +44,7 @@ namespace MathTypeProject
 
                     break;
             }
-            while (true)
-            {
-
-            }
+            
         }
     }
 }

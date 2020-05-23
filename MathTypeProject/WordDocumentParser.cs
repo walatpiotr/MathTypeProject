@@ -66,10 +66,10 @@ namespace MathTypeProject
                         string temp_file_path = this.inputFileDir + @"\EquationTemporaryFile.txt";
                         using (System.IO.StreamWriter file = new System.IO.StreamWriter(temp_file_path))
                         {
-                            for (int i = 1; i <= OMathsCount; i++)
+                            while (myRange.OMaths != null)
                             {
                                 //myRange.OMaths[i].ConvertToNormalText();
-                                Word.OMath currentEquation = myRange.OMaths[i];
+                                Word.OMath currentEquation = myRange.OMaths[1];
 
                                 currentEquation.Range.Select();
 
@@ -105,6 +105,14 @@ namespace MathTypeProject
                                     Clipboard.Clear();
                                 }
 
+                                //removing text from start to end
+
+                                
+                                int start = currentEquation.Range.Start;
+                                int end = currentEquation.Range.End;
+                                currentEquation.Range.Application.Selection.Delete();
+                                
+                                
                             }
                         }
                     }

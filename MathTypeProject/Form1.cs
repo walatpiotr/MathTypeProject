@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace MathTypeProject
 {
-    public partial class Form1 : Form
+    public partial class EquationToLaTeXConverter : Form
     {
         public static string passingText;
-        public Form1()
+        public EquationToLaTeXConverter()
         {
             InitializeComponent();
         }
@@ -33,8 +33,8 @@ namespace MathTypeProject
                 CheckFileExists = true,
                 CheckPathExists = true,
 
-                DefaultExt = "docx",
-                Filter = "docx files (*.docx)|*.docx",
+                //DefaultExt = "docx",
+                //Filter = "docx files (*.docx)|*.docx",
                 FilterIndex = 2,
                 RestoreDirectory = true,
 
@@ -53,6 +53,11 @@ namespace MathTypeProject
             string passingText = textBox1.Text;
             FileTypeChooser program = new FileTypeChooser(passingText);
             
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

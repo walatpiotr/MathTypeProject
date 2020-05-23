@@ -43,7 +43,7 @@ namespace MathTypeProject
             File.SetAttributes(inputFilePath, FileAttributes.Normal);
 
             pptOpen = this.app.Presentations.Open(inputFilePath); // -- , Visible: isVisible
-
+            //pptOpen.Activate();
             this.slides = pptOpen.Slides;
         }
 
