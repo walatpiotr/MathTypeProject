@@ -45,6 +45,11 @@ namespace MathTypeProject
 
         public void findMathTypeEquations()
         {
+            Word.Shapes objects = docOpen.Shapes;
+            foreach (Word.Shape shape in objects)
+            {
+                Console.WriteLine(shape.TextFrame);
+            }
             Thread staThread = new Thread(
             delegate ()
             {

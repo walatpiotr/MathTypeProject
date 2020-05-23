@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MathTypeProject
 {
-    class Program
+    class FileTypeChooser
     {
-        static void Main(string[] args)
+        string filePathFromWinForm;
+        public FileTypeChooser(string arg)
         {
-            Console.WriteLine("Insert document path: \n");
-            string inputFilePath = Console.ReadLine();
+            //Console.WriteLine("Insert document path: \n");
+            string inputFilePath = arg;
+            Console.WriteLine(inputFilePath);
             char[] separator = { '\\' };
             char[] separator2 = { '.' };
             string[] directories = inputFilePath.Split(separator, StringSplitOptions.RemoveEmptyEntries);
@@ -24,21 +27,20 @@ namespace MathTypeProject
             {
                 case "ppt":
                 case "pptx":
-                    ExcelDocumentParser document2 = new ExcelDocumentParser(inputFilePath);
+                    PowerPointDocumentParser document2 = new PowerPointDocumentParser(inputFilePath);
                     document2.findMathTypeEquations();
                     Console.WriteLine("tadam!");
                     break;
 
-                case "xls":
-                case "xlsx":
-                    PowerPointDocumentParser document3 = new PowerPointDocumentParser(inputFilePath);
-                    document3.findMathTypeEquations();
+                case "doc":
+                case "docx":
+                    WordDocumentParser document1 = new WordDocumentParser(inputFilePath);
+                    document1.findMathTypeEquations();
 
                     break;
 
                 default:
-                    WordDocumentParser document1 = new WordDocumentParser(inputFilePath);
-                    document1.findMathTypeEquations();
+                    MessageBox.Show("File type not supported");
 
                     break;
             }
@@ -46,9 +48,6 @@ namespace MathTypeProject
             {
 
             }
-
-
-
         }
     }
 }
