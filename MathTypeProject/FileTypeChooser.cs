@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MathTypeProject
 {
-    class Program
+    class FileTypeChooser
     {
-        static void Main(string[] args)
+        
+        public FileTypeChooser(string arg)
         {
-            Console.WriteLine("Insert document path: \n");
-            string inputFilePath = Console.ReadLine();
+            //Console.WriteLine("Insert document path: \n");
+            string inputFilePath = arg;
+            Console.WriteLine(inputFilePath);
             char[] separator = { '\\' };
             char[] separator2 = { '.' };
             string[] directories = inputFilePath.Split(separator, StringSplitOptions.RemoveEmptyEntries);
@@ -26,21 +29,25 @@ namespace MathTypeProject
                 case "pptx":
                     PowerPointDocumentParser document2 = new PowerPointDocumentParser(inputFilePath);
                     document2.findMathTypeEquations();
+<<<<<<< HEAD:MathTypeProject/Program.cs
+=======
+                    Console.WriteLine("tadam!");
                     break;
 
-                default:
+                case "doc":
+                case "docx":
                     WordDocumentParser document1 = new WordDocumentParser(inputFilePath);
                     document1.findMathTypeEquations();
 
+>>>>>>> 2bd5e6455504c229cedf528064d7b495f0ffaa62:MathTypeProject/FileTypeChooser.cs
+                    break;
+
+                default:
+                    MessageBox.Show("File type not supported");
+
                     break;
             }
-            while (true)
-            {
-
-            }
-
-
-
+            
         }
     }
 }
