@@ -24,16 +24,8 @@ namespace MathTypeProject
             {
                 case "ppt":
                 case "pptx":
-                    ExcelDocumentParser document2 = new ExcelDocumentParser(inputFilePath);
+                    PowerPointDocumentParser document2 = new PowerPointDocumentParser(inputFilePath);
                     document2.findMathTypeEquations();
-                    Console.WriteLine("tadam!");
-                    break;
-
-                case "xls":
-                case "xlsx":
-                    PowerPointDocumentParser document3 = new PowerPointDocumentParser(inputFilePath);
-                    document3.findMathTypeEquations();
-
                     break;
 
                 default:

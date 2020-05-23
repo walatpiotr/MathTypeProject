@@ -81,7 +81,7 @@ namespace MathTypeProject
                                 /////////////////////////////////////////////////////////////////////////////////////
 
                                 char[] tokens = tekst.ToCharArray();
-                                string[] parsed = parseTokensToMSEq(tokens);
+                                string[] parsed = parseTokensToTex(tokens);
                                 foreach(string p in parsed)
                                 {
                                     Console.WriteLine(p);
@@ -120,21 +120,21 @@ namespace MathTypeProject
             staThread.Join();
 
         }
-        private string[] parseTokensToMSEq(char[] tokens)
+        private string[] parseTokensToTex(char[] tokens)
         {
             int iterator = 0;
             string[] new_tokens = new string[tokens.Length];
+            DictionaryWrapper dict = new DictionaryWrapper();
 
             while(iterator < tokens.Length)
             {
-                switch (tokens[iterator])
+                if(dict.unicodeToLatex.ContainsKey(tokens[iterator]))
                 {
-                    case '√':
-                        new_tokens[iterator] = @"\sqrt{";
-                        break;
-                    default:
-                        new_tokens[iterator] = tokens[iterator].ToString();
-                        break;
+                    new_tokens[iterator] = dict.unicodeToLatex[tokens[iterator]];
+                }
+                else
+                {
+                    new_tokens[iterator] = tokens[iterator].ToString();
                 }
                 iterator++;
             }
