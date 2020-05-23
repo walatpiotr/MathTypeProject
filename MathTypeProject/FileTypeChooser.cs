@@ -29,6 +29,8 @@ namespace MathTypeProject
                 case "pptx":
                     PowerPointDocumentParser document2 = new PowerPointDocumentParser(inputFilePath);
                     document2.findMathTypeEquations();
+<<<<<<< HEAD:MathTypeProject/Program.cs
+=======
                     Console.WriteLine("tadam!");
                     break;
 
@@ -37,6 +39,7 @@ namespace MathTypeProject
                     WordDocumentParser document1 = new WordDocumentParser(inputFilePath);
                     document1.findMathTypeEquations();
 
+>>>>>>> 2bd5e6455504c229cedf528064d7b495f0ffaa62:MathTypeProject/FileTypeChooser.cs
                     break;
 
                 default:
