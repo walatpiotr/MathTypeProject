@@ -31,6 +31,7 @@ namespace MathTypeProject
             }
             this.inputFileDir = dir;
             this.inputFileName = directories[directories.Length - 1];
+            Console.WriteLine(inputFileName);
             this.app = new Word.Application();
             this.docOpen = app.Documents.Open(inputFilePath);
             this.myRange = docOpen.Range();
