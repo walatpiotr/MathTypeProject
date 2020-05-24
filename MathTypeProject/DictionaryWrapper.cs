@@ -189,15 +189,19 @@ namespace MathTypeProject
             unicodeToLatex.Add('ℷ', @"\gimel ");
             unicodeToLatex.Add('ℸ', @"\daleth ");
 
-            unicodeToLatex.Add('√', @"\sqrt[2]{}");
+            unicodeToLatex.Add('√', @"\sqrt[]{}");
             unicodeToLatex.Add('∛', @"\cbrt{}");
             unicodeToLatex.Add('∜', @"\qdrt{}");
             unicodeToLatex.Add('/', @"\frac{}{}");
             unicodeToLatex.Add('⁄', @"\frac{}{}");
-            unicodeToLatex.Add('□', @"");   //znak kontrolny przed ulamkiem □(1/2)
+            unicodeToLatex.Add('□', "expect parenthesis");
+            unicodeToLatex.Add('█', "expect par with at");
             unicodeToLatex.Add('^', @"^{}");
             unicodeToLatex.Add('_', @"_{}");
-            unicodeToLatex.Add('▒', @"");   //znak kontrolny po całce ∫▒2
+            unicodeToLatex.Add('▒', "big operator separator");   //znak kontrolny po całce ∫▒2
+            unicodeToLatex.Add('¦', @"$$$${}\choose{}$$$$");
+            unicodeToLatex.Add('〖', @"(");
+            unicodeToLatex.Add('〗', @")");
 
 
             unicodeToLatex.Add('∅', @"\emptyset ");
@@ -369,7 +373,8 @@ namespace MathTypeProject
             unicodeToLatex.Add('Χ', @"\Chi ");
             unicodeToLatex.Add('Ψ', @"\Psi ");
             unicodeToLatex.Add('Ω', @"\Omega ");
- 
+
+            unicodeToLatex.Add('·', @"\cdot ");
             unicodeToLatex.Add('⋮', @"\vdots ");
             unicodeToLatex.Add('⋯', @"\cdots ");
             unicodeToLatex.Add('⋰', @"\rddots ");
