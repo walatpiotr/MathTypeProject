@@ -66,9 +66,8 @@ namespace MathTypeProject
                         string temp_file_path = this.inputFileDir + @"\EquationTemporaryFile.txt";
                         using (System.IO.StreamWriter file = new System.IO.StreamWriter(temp_file_path))
                         {
-                            while (myRange.OMaths != null)
+                            while (myRange.OMaths.Count != 0)
                             {
-                                //myRange.OMaths[i].ConvertToNormalText();
                                 Word.OMath currentEquation = myRange.OMaths[1];
 
                                 currentEquation.Range.Select();
@@ -76,24 +75,27 @@ namespace MathTypeProject
                                 currentEquation.Range.TextRetrievalMode.IncludeHiddenText = true;
                                 currentEquation.Range.TextRetrievalMode.IncludeFieldCodes = true;
 
-                                // @Diagnostic
                                 currentEquation.Range.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
 
                                 currentEquation.Range.Application.Selection.Copy();
 
 
                                 String tekst = Clipboard.GetText();
+                                String new_tekst = "$$";
                                 /////////////////////////////////////////////////////////////////////////////////////
 
                                 char[] tokens = tekst.ToCharArray();
-                                string[] parsed = parseTokensToTex(tokens);
-                                foreach(string p in parsed)
+                                string[] parsed = translateTokensToTex(tokens);
+                                for(int p = 0; p < parsed.Length; p++)
                                 {
-                                    Console.WriteLine(p);
+                                    Console.Write(parsed[p]+"^.^");
                                 }
-                                Console.WriteLine("koniec");
-
-
+                                Console.WriteLine("---------------------------------------------------");
+                                for (int p = 0; p < parsed.Length; p++)
+                                {
+                                    new_tekst += parseToken(ref parsed, p);
+                                }
+                                new_tekst += "$$";
                                 /////////////////////////////////////////////////////////////////////////////////////
                                 file.WriteLine(tekst);
                                 if (clipboard_memory.CompareTo("") != 0)
@@ -106,13 +108,11 @@ namespace MathTypeProject
                                 }
 
                                 //removing text from start to end
-
-                                
+                               
                                 int start = currentEquation.Range.Start;
                                 int end = currentEquation.Range.End;
                                 currentEquation.Range.Application.Selection.Delete();
-                                
-                                
+                                currentEquation.Range.InsertBefore(new_tekst);
                             }
                         }
                     }
@@ -133,7 +133,7 @@ namespace MathTypeProject
             staThread.Join();
 
         }
-        private string[] parseTokensToTex(char[] tokens)
+        private string[] translateTokensToTex(char[] tokens)
         {
             int iterator = 0;
             string[] new_tokens = new string[tokens.Length];
@@ -152,6 +152,142 @@ namespace MathTypeProject
                 iterator++;
             }
             return new_tokens;
+        }
+
+        private string parseSqrt(ref string[] parsed, int p)
+        {
+            if (parsed[p + 1] == "(")
+            {
+                int amp_idx = 0;
+                int par_count = 1;
+                int temp_idx = p + 2;
+                while (par_count != 0)
+                {
+                    if (parsed[temp_idx] == "(")
+                    {
+                        par_count++;
+                    }
+                    else if (parsed[temp_idx] == ")")
+                    {
+                        par_count--;
+                    }
+                    else if (parsed[temp_idx] == "&")
+                    {
+                        amp_idx = temp_idx;
+                        temp_idx = p + 2;
+                        parsed[p] = @"\sqrt[";
+                        parsed[p + 1] = @"";
+                        while (temp_idx != amp_idx)
+                        {
+                            parsed[p] += parsed[temp_idx];
+                            parsed[temp_idx] = @"";
+                            temp_idx++;
+                        }
+                        parsed[temp_idx] = @"";
+                        parsed[p] += @"]{}";
+                    }
+                    else
+                    {
+                        parsed[temp_idx] = parseToken(ref parsed, temp_idx);
+                    }
+                    temp_idx++;
+                }
+                parsed[p + 1] = @"";
+                parsed[temp_idx - 1] = @"";
+                parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
+                if(amp_idx == 0)
+                {
+                    amp_idx = p + 1;
+                }
+                for(int idx = amp_idx+1; idx < temp_idx-1; idx++)
+                {
+                    parsed[p] += parsed[idx];
+                    parsed[idx] = @"";
+                }
+                parsed[p] += @"}";
+            }
+            else
+            {
+                int temp_idx = p + 1;
+                while(temp_idx < parsed.Length && Char.IsDigit(parsed[temp_idx].ToCharArray()[0]))
+                {
+                    temp_idx++;
+                }
+                parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
+                for (int idx = p + 1; idx < temp_idx; idx++)
+                {
+                    parsed[p] += parsed[idx];
+                    parsed[idx] = @"";
+                }
+                parsed[p] += @"}";
+            }
+            return parsed[p];
+        }
+
+        private string parseGenericTokenWithCurlyBraces(ref string[] parsed, int p)
+        {
+            if (parsed[p + 1] == "(")
+            {
+                int par_count = 1;
+                int temp_idx = p + 2;
+                while (par_count != 0)
+                {
+                    if (parsed[temp_idx] == "(")
+                    {
+                        par_count++;
+                    }
+                    else if (parsed[temp_idx] == ")")
+                    {
+                        par_count--;
+                    }
+                    else
+                    {
+                        parsed[temp_idx] = parseToken(ref parsed, temp_idx);
+                    }
+                    temp_idx++;
+                }
+                parsed[p + 1] = @"";
+                parsed[temp_idx - 1] = @"";
+                parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
+                for (int idx = p + 2; idx < temp_idx - 1; idx++)
+                {
+                    parsed[p] += parsed[idx];
+                    parsed[idx] = @"";
+                }
+                parsed[p] += @"}";
+            }
+            else
+            {
+                int temp_idx = p + 1;
+                while (temp_idx < parsed.Length && Char.IsDigit(parsed[temp_idx].ToCharArray()[0]))
+                {
+                    temp_idx++;
+                }
+                parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
+                for (int idx = p + 1; idx < temp_idx; idx++)
+                {
+                    parsed[p] += parsed[idx];
+                    parsed[idx] = @"";
+                }
+                parsed[p] += @"}";
+            }
+            return parsed[p];
+        }
+
+            private string parseToken(ref string[] parsed, int index)
+        {
+            if (parsed[index] == @"\sqrt[]{}")
+            {
+                return parseSqrt(ref parsed, index);
+            }
+            else if (parsed[index] == @"\cbrt{}" || parsed[index] == @"\qdrt{}" || parsed[index] == @"^{}" || parsed[index] == @"_{}")
+            {
+                return parseGenericTokenWithCurlyBraces(ref parsed, index);
+            }
+            else
+            {
+                return parsed[index];
+            }
         }
 
         public void parse() {}
