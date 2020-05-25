@@ -256,6 +256,22 @@ namespace MathTypeProject
                 }
                 parsed[p] += @"}";
             }
+            else if (parsed[p+1].ToCharArray()[0] == '\\')
+            {
+                int temp_idx = p + 2;
+                while(parsed[temp_idx] != "big operator separator")
+                {
+                    temp_idx++;
+                }
+                parsed[temp_idx] = @"";
+                parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
+                for (int idx = p + 1; idx < temp_idx; idx++)
+                {
+                    parsed[p] += parsed[idx];
+                    parsed[idx] = @"";
+                }
+                parsed[p] += @"}";
+            }
             else
             {
                 int temp_idx = p + 1;
