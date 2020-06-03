@@ -256,22 +256,6 @@ namespace MathTypeProject
                 }
                 parsed[p] += @"}";
             }
-            else if (parsed[p+1].ToCharArray()[0] == '\\')
-            {
-                int temp_idx = p + 2;
-                while(parsed[temp_idx] != "big operator separator")
-                {
-                    temp_idx++;
-                }
-                parsed[temp_idx] = @"";
-                parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
-                for (int idx = p + 1; idx < temp_idx; idx++)
-                {
-                    parsed[p] += parsed[idx];
-                    parsed[idx] = @"";
-                }
-                parsed[p] += @"}";
-            }
             else
             {
                 int temp_idx = p + 1;
@@ -290,15 +274,81 @@ namespace MathTypeProject
             return parsed[p];
         }
 
-            private string parseToken(ref string[] parsed, int index)
+        private string parseSubSup(ref string[] parsed, int p)
+        {
+            if (parsed[p + 1] == "(")
+            {
+                int par_count = 1;
+                int temp_idx = p + 2;
+                while (par_count != 0)
+                {
+                    if (parsed[temp_idx] == "(")
+                    {
+                        par_count++;
+                    }
+                    else if (parsed[temp_idx] == ")")
+                    {
+                        par_count--;
+                    }
+                    else
+                    {
+                        parsed[temp_idx] = parseToken(ref parsed, temp_idx);
+                    }
+                    temp_idx++;
+                }
+                parsed[p + 1] = @"";
+                parsed[temp_idx - 1] = @"";
+                parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
+                for (int idx = p + 2; idx < temp_idx - 1; idx++)
+                {
+                    parsed[p] += parsed[idx];
+                    parsed[idx] = @"";
+                }
+                parsed[p] += @"}";
+                if (temp_idx != parsed.Length && parsed[temp_idx] == "big operator separator")
+                {
+                    parsed[temp_idx] = @"";
+                }
+            }
+            else
+            {
+                int temp_idx = p + 1;
+                while (temp_idx < parsed.Length && parsed[temp_idx] != @"^{}" && parsed[temp_idx] != "big operator separator")
+                {
+                    temp_idx++;
+                }
+                if (temp_idx != parsed.Length && parsed[temp_idx] == "big operator separator")
+                {
+                    parsed[temp_idx] = @"";
+                }
+                parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
+                for (int idx = p + 1; idx < temp_idx; idx++)
+                {
+                    parsed[p] += parsed[idx];
+                    parsed[idx] = @"";
+                }
+                parsed[p] += @"}";
+            }
+            return parsed[p];
+        }
+
+        private string parseToken(ref string[] parsed, int index)
         {
             if (parsed[index] == @"\sqrt[]{}")
             {
                 return parseSqrt(ref parsed, index);
             }
-            else if (parsed[index] == @"\cbrt{}" || parsed[index] == @"\qdrt{}" || parsed[index] == @"^{}" || parsed[index] == @"_{}")
+            else if (parsed[index] == @"\cbrt{}" || parsed[index] == @"\qdrt{}")
             {
                 return parseGenericTokenWithCurlyBraces(ref parsed, index);
+            }
+            else if (parsed[index] == @"^{}" || parsed[index] == @"_{}")
+            {
+                return parseSubSup(ref parsed, index);
+            }
+            else if (parsed[index] == "big operator separator")
+            {
+                return @"";
             }
             else
             {
