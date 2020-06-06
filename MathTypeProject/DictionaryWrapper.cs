@@ -197,6 +197,7 @@ namespace MathTypeProject
             unicodeToLatex.Add('□', "expect parenthesis");
             unicodeToLatex.Add('█', "expect par with at");
             unicodeToLatex.Add('■', "expect matrix");
+            unicodeToLatex.Add('⁡', @"");    //function control sign
             unicodeToLatex.Add('^', @"^{}");
             unicodeToLatex.Add('_', @"_{}");
             unicodeToLatex.Add('▒', "big operator separator");
@@ -222,6 +223,8 @@ namespace MathTypeProject
             unicodeToLatex.Add('│', @"\vert ");   //fdsymbol package
 
             unicodeToLatex.Add('̇', @"\dot{}");
+            unicodeToLatex.Add('̈', @"\ddot{}");
+            unicodeToLatex.Add('⃛', @"\dddot{}");
             unicodeToLatex.Add('̂', @"\hat{}");
             unicodeToLatex.Add('̌', @"\check{}");
             unicodeToLatex.Add('́', @"\acute{}");

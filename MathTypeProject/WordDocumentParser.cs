@@ -85,7 +85,7 @@ namespace MathTypeProject
                                 /////////////////////////////////////////////////////////////////////////////////////
 
                                 char[] tokens = tekst.ToCharArray();
-                                string[] parsed = translateTokensToTex(tokens);
+                                string[] parsed = TranslateTokensToTex(tokens);
                                 for(int p = 0; p < parsed.Length; p++)
                                 {
                                     Console.Write(parsed[p]+"^.^");
@@ -93,7 +93,14 @@ namespace MathTypeProject
                                 Console.WriteLine("---------------------------------------------------");
                                 for (int p = 0; p < parsed.Length; p++)
                                 {
-                                    new_tekst += parseToken(ref parsed, p);
+                                    parsed[p] = ParseToken(ref parsed, p);
+                                }
+                                for (int p = 0; p < parsed.Length; p++)
+                                {
+                                    if(parsed[p] != @"")
+                                    {
+                                        new_tekst += parsed[p];
+                                    }       
                                 }
                                 new_tekst += "$$";
                                 /////////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +140,7 @@ namespace MathTypeProject
             staThread.Join();
 
         }
-        private string[] translateTokensToTex(char[] tokens)
+        private string[] TranslateTokensToTex(char[] tokens)
         {
             int iterator = 0;
             string[] new_tokens = new string[tokens.Length];
@@ -154,7 +161,7 @@ namespace MathTypeProject
             return new_tokens;
         }
 
-        private string parseSqrt(ref string[] parsed, int p)
+        private string ParseSqrt(ref string[] parsed, int p)
         {
             if (parsed[p + 1] == "(")
             {
@@ -188,7 +195,7 @@ namespace MathTypeProject
                     }
                     else
                     {
-                        parsed[temp_idx] = parseToken(ref parsed, temp_idx);
+                        parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
                     }
                     temp_idx++;
                 }
@@ -224,8 +231,10 @@ namespace MathTypeProject
             return parsed[p];
         }
 
-        private string parseGenericTokenWithCurlyBraces(ref string[] parsed, int p)
+        private string ParseGenericTokenWithCurlyBraces(ref string[] parsed, int p)
         {
+            if (parsed[p + 1] == @" ")
+                parsed[p + 1] = @"";
             if (parsed[p + 1] == "(")
             {
                 int par_count = 1;
@@ -242,7 +251,7 @@ namespace MathTypeProject
                     }
                     else
                     {
-                        parsed[temp_idx] = parseToken(ref parsed, temp_idx);
+                        parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
                     }
                     temp_idx++;
                 }
@@ -259,7 +268,7 @@ namespace MathTypeProject
             else
             {
                 int temp_idx = p + 1;
-                while (temp_idx < parsed.Length && Char.IsDigit(parsed[temp_idx].ToCharArray()[0]))
+                while (temp_idx < parsed.Length && Char.IsLetterOrDigit(parsed[temp_idx].ToCharArray()[0]))
                 {
                     temp_idx++;
                 }
@@ -273,8 +282,38 @@ namespace MathTypeProject
             }
             return parsed[p];
         }
+        private string ParseBackwards(ref string[] parsed, int p)
+        {
+            bool nested = false;
+            if(parsed[p] == @"\bar{\bar{}}")
+            {
+                nested = true;
+            }
+            parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
+            if (nested)
+            {
+                parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
+            }
+            int temp_idx = p - 1;
+            while (parsed[temp_idx] == @"" || parsed[temp_idx] == @" ")
+            {
+                if(parsed[temp_idx] == @" ")
+                {
+                    parsed[temp_idx] = @"";
+                }
+                temp_idx--;
+            }
+            parsed[p] += parsed[temp_idx];
+            parsed[temp_idx] = @"";
+            parsed[p] += @"}";
+            if(nested)
+            {
+                parsed[p] += @"}";
+            }
+            return parsed[p];
+        }
 
-        private string parseSubSup(ref string[] parsed, int p)
+        private string ParseSubSup(ref string[] parsed, int p)
         {
             if (parsed[p + 1] == "(")
             {
@@ -292,7 +331,7 @@ namespace MathTypeProject
                     }
                     else
                     {
-                        parsed[temp_idx] = parseToken(ref parsed, temp_idx);
+                        parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
                     }
                     temp_idx++;
                 }
@@ -332,28 +371,291 @@ namespace MathTypeProject
             return parsed[p];
         }
 
-        private string parseToken(ref string[] parsed, int index)
+        private string ParseLetter(ref string[] parsed, int index)
+        {
+            bool changed_to_function = false;
+            int letters_left = parsed.Length - (index + 1);
+            if(letters_left >= 2)
+            {
+                switch (parsed[index])
+                {
+                    case "c":   //cos, cosh, cot, coth, csc, csch
+                        if (parsed[index + 1] == "o")
+                        {
+                            if (parsed[index + 2] == "s")
+                            {
+                                if (letters_left > 2 && parsed[index + 3] == "h")
+                                {
+                                    changed_to_function = true;
+                                    parsed[index] = @"\cosh";
+                                    parsed[index + 3] = @"";
+                                }
+                                else
+                                {
+                                    changed_to_function = true;
+                                    parsed[index] = @"\cos";
+                                }
+                                parsed[index + 1] = @"";
+                                parsed[index + 2] = @"";
+                            }
+                            else if(parsed[index + 2] == "t")
+                            {
+                                if (letters_left > 2 && parsed[index + 3] == "h")
+                                {
+                                    changed_to_function = true;
+                                    parsed[index] = @"\coth";
+                                    parsed[index + 3] = @"";
+                                }
+                                else
+                                {
+                                    changed_to_function = true;
+                                    parsed[index] = @"\cot";
+                                }
+                                parsed[index + 1] = @"";
+                                parsed[index + 2] = @"";
+                            }
+                        }
+                        else if (parsed[index + 1] == "s" && parsed[index + 2] == "c")
+                        {
+                            if (letters_left > 2 && parsed[index + 3] == "h")
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\text{csch}";
+                                parsed[index + 3] = @"";
+                            }
+                            else
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\csc";
+                            }
+                            parsed[index + 1] = @"";
+                            parsed[index + 2] = @"";
+                        }
+                        break;
+                    case "l":   //lim, ln, log
+                        if (parsed[index + 1] == "i" && parsed[index + 2] == "m")
+                        {
+                            changed_to_function = true;
+                            parsed[index] = @"\lim";
+                            parsed[index + 1] = @"";
+                            parsed[index + 2] = @"";
+                        }
+                        else if (parsed[index + 1] == "n")
+                        {
+                            changed_to_function = true;
+                            parsed[index] = @"\ln";
+                            parsed[index + 1] = @"";
+                        }
+                        else if (parsed[index + 1] == "o" && parsed[index + 2] == "g")
+                        {
+                            changed_to_function = true;
+                            parsed[index] = @"\log";
+                            parsed[index + 1] = @"";
+                            parsed[index + 2] = @"";
+                        }
+                        break;
+                    case "m":   //max, min
+                        if (parsed[index + 1] == "a" && parsed[index + 2] == "x")
+                        {
+                            changed_to_function = true;
+                            parsed[index] = @"\max";
+                            parsed[index + 1] = @"";
+                            parsed[index + 2] = @"";
+                        }
+                        else if (parsed[index + 1] == "i" && parsed[index + 2] == "n")
+                        {
+                            changed_to_function = true;
+                            parsed[index] = @"\min";
+                            parsed[index + 1] = @"";
+                            parsed[index + 2] = @"";
+                        }
+                        break;
+                    case "s":   //sec, sech, sin, sinh
+                        if (parsed[index + 1] == "i" && parsed[index + 2] == "n")
+                        {
+                            if (letters_left > 2 && parsed[index + 3] == "h")
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\sinh";
+                                 parsed[index + 3] = @"";
+                            }
+                            else
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\sin";
+                            }
+                            parsed[index + 1] = @"";
+                            parsed[index + 2] = @"";
+                        }
+                        else if (parsed[index + 1] == "e" && parsed[index + 2] == "c")
+                        {
+                            if (letters_left > 2 && parsed[index + 3] == "h")
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\text{sech}";
+                                parsed[index + 3] = @"";
+                            }
+                            else
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\sec";
+                            }
+                            parsed[index + 1] = @"";
+                            parsed[index + 2] = @"";
+                        }
+                        break;
+                    case "t":   //tan, tanh
+                        if (parsed[index + 1] == "a" && parsed[index + 2] == "n")
+                        {
+                            if (letters_left > 2 && parsed[index + 3] == "h")
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\tanh";
+                                parsed[index + 3] = @"";
+                            }
+                            else
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\tan";
+                            }
+                            parsed[index + 1] = @"";
+                            parsed[index + 2] = @"";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (letters_left == 1)
+            {
+                if(parsed[index] == "l" && parsed[index+1] == "n")
+                {
+                    changed_to_function = true;
+                    parsed[index] = @"\ln";
+                    parsed[index + 1] = @"";
+                }
+            }
+
+            if (changed_to_function)
+            {
+                int temp_idx = index+1;
+                while(parsed[temp_idx] == @"")
+                {
+                    temp_idx++;
+                }
+
+                if (parsed[temp_idx] == @"^{}")
+                {
+                    parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
+                    parsed[index] += parsed[temp_idx];
+                    parsed[temp_idx] = @"";
+                    temp_idx++;
+                    if(parsed[temp_idx] == ")")
+                    {
+                        parsed[temp_idx] = @"";
+                        parsed[index - 1] = @"";
+                    }
+                    while (parsed[temp_idx] == @"" || parsed[temp_idx] == @" ")
+                    {
+                        temp_idx++;
+                    }
+                }
+                if (parsed[temp_idx] == @"_{}")
+                {
+                    parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
+                    parsed[index] += parsed[temp_idx];
+                    parsed[temp_idx] = @"";
+                    while (parsed[temp_idx] == @"")
+                    {
+                        temp_idx++;
+                    }
+                }
+
+                parsed[index] += " (";
+                if (parsed[temp_idx] == "(")
+                {
+                    int par_count = 1;
+                    parsed[temp_idx] = @"";
+                    temp_idx++;
+                    if (parsed[temp_idx] == "(")
+                    {
+                        par_count++;
+                        parsed[temp_idx] = @"";
+                        temp_idx++;
+                    }
+                    while(par_count != 0)
+                    {
+                        if (parsed[temp_idx] == "(")
+                        {
+                            par_count++;
+                        }
+                        else if (parsed[temp_idx] == ")")
+                        {
+                            par_count--;
+                            if (par_count == 1 && parsed[temp_idx+1] == ")")
+                            {
+                                parsed[temp_idx] = @"";
+                            }
+                        }
+                        parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
+                        parsed[index] += parsed[temp_idx];
+                        parsed[temp_idx] = @"";
+                        temp_idx++;
+                    }
+                }
+                else
+                {
+                    while(temp_idx < parsed.Length && parsed[temp_idx] != " ")
+                    {
+                        parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
+                        parsed[index] += parsed[temp_idx];
+                        parsed[temp_idx] = @"";
+                        temp_idx++;
+                    }
+                    parsed[index] += ")";
+                }
+            }
+
+            return parsed[index];
+        }
+
+        private string ParseToken(ref string[] parsed, int index)
         {
             if (parsed[index] == @"\sqrt[]{}")
             {
-                return parseSqrt(ref parsed, index);
+                return ParseSqrt(ref parsed, index);
             }
-            else if (parsed[index] == @"\cbrt{}" || parsed[index] == @"\qdrt{}")
+            else if (parsed[index] == @"\cbrt{}" || parsed[index] == @"\qdrt{}" || parsed[index] == @"\overbrace{}" || parsed[index] == @"\brace{}" || parsed[index] == @"\overline{}" || parsed[index] == @"\underline{}")
             {
-                return parseGenericTokenWithCurlyBraces(ref parsed, index);
+                return ParseGenericTokenWithCurlyBraces(ref parsed, index);
             }
             else if (parsed[index] == @"^{}" || parsed[index] == @"_{}")
             {
-                return parseSubSup(ref parsed, index);
+                return ParseSubSup(ref parsed, index);
             }
             else if (parsed[index] == "big operator separator")
             {
                 return @"";
             }
+            else if (BackwardsRequired(parsed[index]))
+            {
+                return ParseBackwards(ref parsed, index);
+            }
+            else if (parsed[index] != @"" && Char.IsLetter(parsed[index].ToCharArray()[0]))
+            {
+                return ParseLetter(ref parsed, index);
+            }
             else
             {
                 return parsed[index];
             }
+        }
+
+        private bool BackwardsRequired(string s)
+        {
+            if (s == @"\dot{}" || s == @"\ddot{}" || s == @"\dddot{}" || s == @"\hat{}" || s == @"\check{}" || s == @"\acute{}" || s == @"\grave{}" || s == @"\breve{}" || s == @"\tilde{}" || s == @"\bar{}" || s == @"\bar{\bar{}}" || s == @"\overleftarrow{}" || s == @"\vec{}" || s == @"\overleftrightarrow{}")
+                return true;
+            return false;
         }
 
         public void parse() {}
