@@ -197,11 +197,11 @@ namespace MathTypeProject
             unicodeToLatex.Add('□', "expect parenthesis");
             unicodeToLatex.Add('█', "expect par with at");
             unicodeToLatex.Add('■', "expect matrix");
-            unicodeToLatex.Add('⁡', @"");    //function control sign
+            unicodeToLatex.Add('⁡', @" ");    //function control sign
             unicodeToLatex.Add('^', @"^{}");
             unicodeToLatex.Add('_', @"_{}");
             unicodeToLatex.Add('▒', "big operator separator");
-            unicodeToLatex.Add('¦', @"$$$${}\choose{}$$$$");
+            unicodeToLatex.Add('¦', @"{ \choose }");
             unicodeToLatex.Add('〖', @"(");
             unicodeToLatex.Add('〗', @")");
             unicodeToLatex.Add('┴', "text above");  //requires additional definitions

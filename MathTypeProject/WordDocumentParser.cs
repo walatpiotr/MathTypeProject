@@ -119,7 +119,10 @@ namespace MathTypeProject
                                 int start = currentEquation.Range.Start;
                                 int end = currentEquation.Range.End;
                                 currentEquation.Range.Application.Selection.Delete();
-                                currentEquation.Range.InsertBefore(new_tekst);
+                                if(new_tekst != "$$$$")
+                                {
+                                    currentEquation.Range.InsertBefore(new_tekst);
+                                }
                             }
                         }
                     }
@@ -284,16 +287,16 @@ namespace MathTypeProject
         }
         private string ParseBackwards(ref string[] parsed, int p)
         {
-            bool nested = false;
-            if(parsed[p] == @"\bar{\bar{}}")
+            int additional_signs_count = 1;
+            if (parsed[p] == @"\bar{\bar{}}")
             {
-                nested = true;
+                additional_signs_count = 2;
             }
-            parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
-            if (nested)
+            else if (parsed[p] == @"\frac{}{}")
             {
-                parsed[p] = parsed[p].Substring(0, parsed[p].Length - 1);
+                additional_signs_count = 3;
             }
+            parsed[p] = parsed[p].Substring(0, parsed[p].Length - additional_signs_count);
             int temp_idx = p - 1;
             while (parsed[temp_idx] == @"" || parsed[temp_idx] == @" ")
             {
@@ -303,12 +306,48 @@ namespace MathTypeProject
                 }
                 temp_idx--;
             }
-            parsed[p] += parsed[temp_idx];
-            parsed[temp_idx] = @"";
+            int last_idx = temp_idx;
+            if (parsed[temp_idx] == ")")
+            {
+                int par_count = 1;
+                temp_idx--;
+                while(par_count != 0)
+                {
+                    if (parsed[temp_idx] == ")")
+                    {
+                        par_count++;
+                    }
+                    else if (parsed[temp_idx] == "(")
+                    {
+                        par_count--;
+                    }
+                    temp_idx--;
+                }
+                temp_idx++;
+            }
+            else if (additional_signs_count == 3)
+            {
+                while(parsed[temp_idx] != " ")
+                {
+                    temp_idx--;
+                }
+                temp_idx++;
+            }
+
+            for(int i = temp_idx; i <= last_idx; i++)
+            {
+                parsed[p] += parsed[i];
+                parsed[i] = @"";
+            }
+
             parsed[p] += @"}";
-            if(nested)
+            if(additional_signs_count == 2)
             {
                 parsed[p] += @"}";
+            }
+            else if (additional_signs_count == 3)
+            {
+                parsed[p] += @"{}";
             }
             return parsed[p];
         }
@@ -352,7 +391,7 @@ namespace MathTypeProject
             else
             {
                 int temp_idx = p + 1;
-                while (temp_idx < parsed.Length && parsed[temp_idx] != @"^{}" && parsed[temp_idx] != "big operator separator")
+                while (temp_idx < parsed.Length && parsed[temp_idx] != @"^{}" && parsed[temp_idx] != @"_{}" && parsed[temp_idx] != @" " && parsed[temp_idx] != "big operator separator" && parsed[temp_idx] != ")")
                 {
                     temp_idx++;
                 }
@@ -539,7 +578,7 @@ namespace MathTypeProject
             if (changed_to_function)
             {
                 int temp_idx = index+1;
-                while(parsed[temp_idx] == @"")
+                while(parsed[temp_idx] == @"" || parsed[temp_idx] == " ")
                 {
                     temp_idx++;
                 }
@@ -550,13 +589,14 @@ namespace MathTypeProject
                     parsed[index] += parsed[temp_idx];
                     parsed[temp_idx] = @"";
                     temp_idx++;
-                    if(parsed[temp_idx] == ")")
+                    while (parsed[temp_idx] == @"" || parsed[temp_idx] == @" ")
+                    {
+                        temp_idx++;
+                    }
+                    if (parsed[temp_idx] == ")")
                     {
                         parsed[temp_idx] = @"";
                         parsed[index - 1] = @"";
-                    }
-                    while (parsed[temp_idx] == @"" || parsed[temp_idx] == @" ")
-                    {
                         temp_idx++;
                     }
                 }
@@ -565,7 +605,7 @@ namespace MathTypeProject
                     parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
                     parsed[index] += parsed[temp_idx];
                     parsed[temp_idx] = @"";
-                    while (parsed[temp_idx] == @"")
+                    while (parsed[temp_idx] == @"" || parsed[temp_idx] == @" ")
                     {
                         temp_idx++;
                     }
@@ -619,6 +659,169 @@ namespace MathTypeProject
             return parsed[index];
         }
 
+        private string ParseMatrix(ref string[] parsed, int index)
+        {
+            string ending;
+            switch (parsed[index-1])
+            {
+                case "(":
+                    parsed[index] = @"\begin{pmatrix} ";
+                    ending = @" \end{pmatrix}";
+                    break;
+                case "[":
+                    parsed[index] = @"\begin{bmatrix} ";
+                    ending = @" \end{bmatrix}";
+                    break;
+                case @"\{":
+                    parsed[index] = @"\begin{Bmatrix} ";
+                    ending = @" \end{Bmatrix}";
+                    break;
+                case "|":
+                    parsed[index] = @"\begin{vmatrix} ";
+                    ending = @" \end{vmatrix}";
+                    break;
+                case @"\|":
+                    parsed[index] = @"\begin{Vmatrix} ";
+                    ending = @" \end{Vmatrix}";
+                    break;
+                default:
+                    parsed[index] = @"\begin{matrix} ";
+                    ending = @" \end{matrix}";
+                    break;
+            }
+            parsed[index - 1] = @"";
+
+            parsed[index + 1] = @"";
+            int temp_idx = index + 2;
+            int par_count = 1;
+            while(!(par_count == 1 && parsed[temp_idx-1] == ")"))
+            {
+                int i = temp_idx;
+                while(parsed[temp_idx] != "&" && parsed[temp_idx] != "@" && !(par_count == 1 && parsed[temp_idx] == ")"))
+                {
+                    if (parsed[temp_idx] == "(")
+                    {
+                        par_count++;
+                    }
+                    else if (parsed[temp_idx] == ")")
+                    {
+                        par_count--;
+                    }
+                    else
+                    {
+                        parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
+                    }
+                    temp_idx++;
+                }
+                for(; i < temp_idx; i++)
+                {
+                    parsed[index] += parsed[i];
+                    parsed[i] = @"";
+                }
+                if (parsed[temp_idx] == "&")
+                {
+                    parsed[index] += " ";
+                    parsed[index] += parsed[temp_idx];
+                    parsed[temp_idx] = @"";
+                    parsed[index] += " ";
+                }
+                else if (parsed[temp_idx] == "@")
+                {
+                    parsed[index] += @"\\ ";
+                    parsed[temp_idx] = @"";
+                }
+                temp_idx++;
+            }
+            parsed[index] += ending;
+            parsed[temp_idx - 1] = @"";
+            parsed[temp_idx] = @"";
+            return parsed[index];
+        }
+
+        private string ParseFraction(ref string[] parsed, int index)
+        {
+            parsed[index] = ParseBackwards(ref parsed, index);
+            parsed[index] = ParseGenericTokenWithCurlyBraces(ref parsed, index);
+            return parsed[index];
+        }
+
+        private string ParseNewton(ref string[] parsed, int index)
+        {
+            int temp_idx = index - 1;
+            int par_count = 0;
+            while(parsed[temp_idx] != " ")
+            {
+                if (IsRightPar(parsed[temp_idx]))
+                {
+                    par_count++;
+                }
+                else if (IsLeftPar(parsed[temp_idx]))
+                {
+                    par_count--;
+                    if (par_count < 0)
+                    {
+                        temp_idx--;
+                        break;
+                    }
+                }
+                temp_idx--;
+            }
+
+            if (IsLeftPar(parsed[temp_idx + 1]))
+            {
+                parsed[temp_idx + 1] = @"";
+            }
+
+            parsed[index] = parsed[index].Substring(1, parsed[index].Length - 1);
+            for (int i = index - 1; i > temp_idx; i--)
+            {
+                parsed[index] = parsed[i] + parsed[index];
+                parsed[i] = @"";
+            }
+            parsed[index] = "{" + parsed[index];
+
+
+
+            temp_idx = index + 1;
+            par_count = 0;
+            while (parsed[temp_idx] != " ")
+            {
+                if (IsLeftPar(parsed[temp_idx]))
+                {
+                    par_count++;
+                }
+                else if (IsRightPar(parsed[temp_idx]))
+                {
+                    par_count--;
+                    if (par_count < 0)
+                    {
+                        temp_idx++;
+                        break;
+                    }
+                }
+                temp_idx++;
+            }
+
+            if (IsRightPar(parsed[temp_idx - 1]))
+            {
+                parsed[temp_idx - 1] = @"";
+            }
+
+            parsed[index] = parsed[index].Substring(0, parsed[index].Length - 1);
+            for (int i = index + 1; i < temp_idx; i++)
+            {
+                parsed[i] = ParseToken(ref parsed, i);
+            }
+            for (int i = index + 1; i < temp_idx; i++)
+            {
+                parsed[index] += parsed[i];
+                parsed[i] = @"";
+            }
+            parsed[index] += "}";
+
+            return parsed[index];
+        }
+
         private string ParseToken(ref string[] parsed, int index)
         {
             if (parsed[index] == @"\sqrt[]{}")
@@ -633,9 +836,21 @@ namespace MathTypeProject
             {
                 return ParseSubSup(ref parsed, index);
             }
+            else if (parsed[index] == @"\frac{}{}")
+            {
+                return ParseFraction(ref parsed, index);
+            }
+            else if (parsed[index] == @"{ \choose }")
+            {
+                return ParseNewton(ref parsed, index);
+            }
             else if (parsed[index] == "big operator separator")
             {
                 return @"";
+            }
+            else if (parsed[index] == "expect matrix")
+            {
+                return ParseMatrix(ref parsed, index);
             }
             else if (BackwardsRequired(parsed[index]))
             {
@@ -654,6 +869,20 @@ namespace MathTypeProject
         private bool BackwardsRequired(string s)
         {
             if (s == @"\dot{}" || s == @"\ddot{}" || s == @"\dddot{}" || s == @"\hat{}" || s == @"\check{}" || s == @"\acute{}" || s == @"\grave{}" || s == @"\breve{}" || s == @"\tilde{}" || s == @"\bar{}" || s == @"\bar{\bar{}}" || s == @"\overleftarrow{}" || s == @"\vec{}" || s == @"\overleftrightarrow{}")
+                return true;
+            return false;
+        }
+
+        private bool IsLeftPar(string s)
+        {
+            if (s == "(" || s == "[" || s == @"\{" || s == @"\langle " || s == @"\lfloor " || s == @"\lceil " || s == @"\|" || s == @"\lBrack")
+                return true;
+            return false;
+        }
+
+        private bool IsRightPar(string s)
+        {
+            if (s == ")" || s == "]" || s == @"\}" || s == @"\rangle " || s == @"\rfloor " || s == @"\rceil " || s == @"\|" || s == @"\rBrack")
                 return true;
             return false;
         }
