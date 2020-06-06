@@ -7,6 +7,7 @@ using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using System.IO;
 using System.Windows.Forms;
 using System.Threading;
+using Microsoft.Office.Core;
 
 namespace MathTypeProject
 {
@@ -18,10 +19,11 @@ namespace MathTypeProject
         Microsoft.Office.Interop.PowerPoint.Presentation pptOpen;
         public List<Object> mathTypeEquations = new List<Object>();
         PowerPoint.Slides slides;
+        EquationToLaTeXConverter form;
 
-        public PowerPointDocumentParser(string inputFilePath)
+        public PowerPointDocumentParser(string inputFilePath, EquationToLaTeXConverter form)
         {
-
+            this.form = form;
 
             char[] separator = { '\\' };
             string[] directories = inputFilePath.Split(separator, StringSplitOptions.RemoveEmptyEntries);
@@ -37,14 +39,24 @@ namespace MathTypeProject
 
             
             this.app = new PowerPoint.Application();
+
             
 
             object isVisible = true;
             File.SetAttributes(inputFilePath, FileAttributes.Normal);
+            if (form.checkBox1.Checked == false)
+            {
+                pptOpen = this.app.Presentations.Open(inputFilePath, MsoTriState.msoFalse, MsoTriState.msoFalse,
+                WithWindow: MsoTriState.msoFalse); // -- , Visible: isVisible
+            }
+            if (form.checkBox1.Checked == true)
+            {
+                pptOpen = this.app.Presentations.Open(inputFilePath, MsoTriState.msoTrue, MsoTriState.msoTrue,
+                WithWindow: MsoTriState.msoTrue);
+            }
 
-            pptOpen = this.app.Presentations.Open(inputFilePath); // -- , Visible: isVisible
-            //pptOpen.Activate();
-            this.slides = pptOpen.Slides;
+                //pptOpen.Activate();
+                this.slides = pptOpen.Slides;
         }
 
 

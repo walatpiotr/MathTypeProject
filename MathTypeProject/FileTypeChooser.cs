@@ -10,7 +10,7 @@ namespace MathTypeProject
     class FileTypeChooser
     {
         
-        public FileTypeChooser(string arg)
+        public FileTypeChooser(string arg,  EquationToLaTeXConverter form)
         {
             //Console.WriteLine("Insert document path: \n");
             string inputFilePath = arg;
@@ -22,18 +22,21 @@ namespace MathTypeProject
             //Console.WriteLine("Write 1 if Word document: \nWrite 2 if Excel document: \nWrite 3 if PowerPoint document: \n");
             //string fileTypeString = Console.ReadLine();
             //int fileType = int.Parse(fileTypeString);
+            
+            
+
 
             switch (filename_extension[1])
             {
                 case "ppt":
                 case "pptx":
-                    PowerPointDocumentParser document2 = new PowerPointDocumentParser(inputFilePath);
+                    PowerPointDocumentParser document2 = new PowerPointDocumentParser(inputFilePath,  form);
                     document2.findMathTypeEquations();
                     break;
 
                 case "doc":
                 case "docx":
-                    WordDocumentParser document1 = new WordDocumentParser(inputFilePath);
+                    WordDocumentParser document1 = new WordDocumentParser(inputFilePath, form);
                     document1.findMathTypeEquations();
                     break;
 
