@@ -29,16 +29,16 @@ namespace MathTypeProject
             unicodeToLatex.Add('⊔', @"\sqcup ");
             unicodeToLatex.Add('∧', @"\wedge ");
             unicodeToLatex.Add('∨', @"\vee ");
-            unicodeToLatex.Add('≮', @"\nless ");    //amssymb package
-            unicodeToLatex.Add('≰', @"\nleq "); //amssymb package
-            unicodeToLatex.Add('≯', @"\ngtr "); //amssymb package
-            unicodeToLatex.Add('≱', @"\ngeq "); //amssymb package
+            unicodeToLatex.Add('≮', @"PACKAMS\nless ");    //amssymb package
+            unicodeToLatex.Add('≰', @"PACKAMS\nleq "); //amssymb package
+            unicodeToLatex.Add('≯', @"PACKAMS\ngtr "); //amssymb package
+            unicodeToLatex.Add('≱', @"PACKAMS\ngeq "); //amssymb package
             unicodeToLatex.Add('∼', @"\sim ");
             unicodeToLatex.Add('≃', @"\simeq ");
             unicodeToLatex.Add('≢', @"\not\equiv ");
             unicodeToLatex.Add('≄', @"\not\simeq ");
             unicodeToLatex.Add('≉', @"\not\approx ");
-            unicodeToLatex.Add('≇', @"\ncong ");    //amssymb package
+            unicodeToLatex.Add('≇', @"PACKAMS\ncong ");    //amssymb package
             unicodeToLatex.Add('∈', @"\in ");
             unicodeToLatex.Add('∋', @"\ni ");
             unicodeToLatex.Add('∉', @"\notin ");
@@ -50,8 +50,8 @@ namespace MathTypeProject
             unicodeToLatex.Add('≻', @"\succ ");
             unicodeToLatex.Add('≼', @"\preceq ");
             unicodeToLatex.Add('≽', @"\succeq ");
-            unicodeToLatex.Add('⊏', @"\sqsubset");  //amssymb package
-            unicodeToLatex.Add('⊐', @"\sqsupset "); //amssymb package
+            unicodeToLatex.Add('⊏', @"PACKAMS\sqsubset");  //amssymb package
+            unicodeToLatex.Add('⊐', @"PACKAMS\sqsupset "); //amssymb package
             unicodeToLatex.Add('⊑', @"\sqsubseteq ");
             unicodeToLatex.Add('⊒', @"\sqsupseteq ");
             unicodeToLatex.Add('∥', @"\parallel ");
@@ -65,11 +65,11 @@ namespace MathTypeProject
             unicodeToLatex.Add('∬', @"\iint "); //amsmath package
             unicodeToLatex.Add('∭', @"\iiint ");    //amsmath package
             unicodeToLatex.Add('∮', @"\oint ");
-            unicodeToLatex.Add('∯', @"\oiint ");    //esint package
-            unicodeToLatex.Add('∰', @"\oiiint ");   //fdsymbol package
-            unicodeToLatex.Add('∱', @"\intclockwise ");   //stix package
-            unicodeToLatex.Add('∲', @"\ointclockwise ");    //esint package
-            unicodeToLatex.Add('∳', @"\ointctrclockwise "); //esint package
+            unicodeToLatex.Add('∯', @"PACKINT\oiint ");    //esint package
+            unicodeToLatex.Add('∰', @"PACKFDS\oiiint ");   //fdsymbol package
+            unicodeToLatex.Add('∱', @"PACKSTX\intclockwise ");   //stix package
+            unicodeToLatex.Add('∲', @"PACKINT\ointclockwise ");    //esint package
+            unicodeToLatex.Add('∳', @"PACKINT\ointctrclockwise "); //esint package
             unicodeToLatex.Add('∏', @"\prod ");
             unicodeToLatex.Add('∐', @"\coprod ");
             unicodeToLatex.Add('⋂', @"\bigcap ");
@@ -80,87 +80,87 @@ namespace MathTypeProject
             unicodeToLatex.Add('⨂', @"\bigotimes ");
             unicodeToLatex.Add('⨁', @"\bigoplus ");
             unicodeToLatex.Add('⨄', @"\biguplus ");
-            unicodeToLatex.Add('⨃', @"\bigcupdot ");    //fdsymbol package
-            unicodeToLatex.Add('∔', @"\dotplus ");  //amssymb package
-            unicodeToLatex.Add('∸', @"\dotminus "); //fdsymbol package
+            unicodeToLatex.Add('⨃', @"PACKFDS\bigcupdot ");    //fdsymbol package
+            unicodeToLatex.Add('∔', @"PACKAMS\dotplus ");  //amssymb package
+            unicodeToLatex.Add('∸', @"PACKFDS\dotminus "); //fdsymbol package
             unicodeToLatex.Add('∖', @"\setminus ");
-            unicodeToLatex.Add('⋒', @"\Cap ");  //amssymb package
-            unicodeToLatex.Add('⋓', @"\Cup ");  //amssymb package
-            unicodeToLatex.Add('⊟', @"\boxminus "); //amssymb package
-            unicodeToLatex.Add('⊠', @"\boxtimes "); //amssymb package
-            unicodeToLatex.Add('⊡', @"\boxdot ");   //amssymb package
-            unicodeToLatex.Add('⊞', @"\boxplus ");  //amssymb package
-            unicodeToLatex.Add('⋇', @"\divideontimes ");    //amssymb package
-            unicodeToLatex.Add('⋉', @"\ltimes ");   //amssymb package
-            unicodeToLatex.Add('⋊', @"\rtimes ");   //amssymb package
-            unicodeToLatex.Add('⋋', @"\leftthreetimes ");   //amssymb package
-            unicodeToLatex.Add('⋌', @"\rightthreetimes");   //amssymb package
-            unicodeToLatex.Add('⋏', @"\curlywedge ");   //amssymb package
-            unicodeToLatex.Add('⋎', @"\curlyvee "); //amssymb package
-            unicodeToLatex.Add('⊝', @"\circleddash ");  //amssymb package
-            unicodeToLatex.Add('⊺', @"\intercal "); //amssymb package
+            unicodeToLatex.Add('⋒', @"PACKAMS\Cap ");  //amssymb package
+            unicodeToLatex.Add('⋓', @"PACKAMS\Cup ");  //amssymb package
+            unicodeToLatex.Add('⊟', @"PACKAMS\boxminus "); //amssymb package
+            unicodeToLatex.Add('⊠', @"PACKAMS\boxtimes "); //amssymb package
+            unicodeToLatex.Add('⊡', @"PACKAMS\boxdot ");   //amssymb package
+            unicodeToLatex.Add('⊞', @"PACKAMS\boxplus ");  //amssymb package
+            unicodeToLatex.Add('⋇', @"PACKAMS\divideontimes ");    //amssymb package
+            unicodeToLatex.Add('⋉', @"PACKAMS\ltimes ");   //amssymb package
+            unicodeToLatex.Add('⋊', @"PACKAMS\rtimes ");   //amssymb package
+            unicodeToLatex.Add('⋋', @"PACKAMS\leftthreetimes ");   //amssymb package
+            unicodeToLatex.Add('⋌', @"PACKAMS\rightthreetimes");   //amssymb package
+            unicodeToLatex.Add('⋏', @"PACKAMS\curlywedge ");   //amssymb package
+            unicodeToLatex.Add('⋎', @"PACKAMS\curlyvee "); //amssymb package
+            unicodeToLatex.Add('⊝', @"PACKAMS\circleddash ");  //amssymb package
+            unicodeToLatex.Add('⊺', @"PACKAMS\intercal "); //amssymb package
             unicodeToLatex.Add('⊕', @"\oplus ");
             unicodeToLatex.Add('⊖', @"\ominus ");
             unicodeToLatex.Add('⊗', @"\otimes ");
             unicodeToLatex.Add('⊘', @"\oslash ");
             unicodeToLatex.Add('⊙', @"\odot ");
-            unicodeToLatex.Add('⊛', @"\oast "); //fdsymbol package
-            unicodeToLatex.Add('⊚', @"\circledcirc ");    //amssymb package
+            unicodeToLatex.Add('⊛', @"PACKFDS\oast "); //fdsymbol package
+            unicodeToLatex.Add('⊚', @"PACKAMS\circledcirc ");    //amssymb package
             unicodeToLatex.Add('†', @"\dag ");
             unicodeToLatex.Add('‡', @"\ddag ");
             unicodeToLatex.Add('⋆', @"\star ");
             unicodeToLatex.Add('⋄', @"\diamond ");
             unicodeToLatex.Add('≀', @"\wr ");
             unicodeToLatex.Add('△', @"\triangle ");
-            unicodeToLatex.Add('⨅', @"\bigsqcap "); //fdsymbol package
+            unicodeToLatex.Add('⨅', @"PACKFDS\bigsqcap "); //fdsymbol package
             unicodeToLatex.Add('⨆', @"\bigsqcup ");
-            unicodeToLatex.Add('∴', @"\therefore ");    //amssymb package
-            unicodeToLatex.Add('∵', @"\because ");  //amssymb package
-            unicodeToLatex.Add('⋘', @"\lll ");  //amssymb package
-            unicodeToLatex.Add('⋙', @"\ggg ");  //amssymb package
-            unicodeToLatex.Add('≦', @"\leqq "); //amssymb package
-            unicodeToLatex.Add('≧', @"\geqq "); //amssymb package
-            unicodeToLatex.Add('≲', @"\lesssim ");  //amssymb package
-            unicodeToLatex.Add('≳', @"\gtrsim ");   //amssymb package
-            unicodeToLatex.Add('⋖', @"\lessdot ");  //amssymb package
-            unicodeToLatex.Add('⋗', @"\gtrdot ");   //amssymb package
-            unicodeToLatex.Add('≶', @"\lessgtr ");  //amssymb package
-            unicodeToLatex.Add('⋚', @"\lesseqgtr ");    //amssymb package
-            unicodeToLatex.Add('≷', @"\gtrless ");  //amssymb package
-            unicodeToLatex.Add('⋛', @"\gtreqless ");    //amssymb package
-            unicodeToLatex.Add('≑', @"\doteqdot "); //amssymb package
-            unicodeToLatex.Add('≒', @"\fallingdotseq ");    //amssymb package
-            unicodeToLatex.Add('≓', @"\risingdotseq "); //amssymb package
-            unicodeToLatex.Add('∽', @"\backsim ");  //amssymb package
-            unicodeToLatex.Add('≊', @"\approxeq "); //amssymb package
-            unicodeToLatex.Add('⋍', @"\backsimeq ");  //amssymb package  
-            unicodeToLatex.Add('⋞', @"\curlyeqprec ");  //amssymb package
-            unicodeToLatex.Add('⋟', @"\curlyeqsucc ");  //amssymb package
-            unicodeToLatex.Add('≾', @"\precsim ");  //amssymb package
-            unicodeToLatex.Add('≿', @"\succsim ");  //amssymb package
-            unicodeToLatex.Add('⋜', @"\eqless ");   //stix package
-            unicodeToLatex.Add('⋝', @"\eqgtr ");    //stix package
-            unicodeToLatex.Add('⊲', @"\vartriangleleft ");  //amssymb package
-            unicodeToLatex.Add('⊳', @"\vartriangleright "); //amssymb package
-            unicodeToLatex.Add('⊴', @"\trianglelefteq ");   //amssymb package
-            unicodeToLatex.Add('⊵', @"\trianglerighteq ");  //amssymb package
+            unicodeToLatex.Add('∴', @"PACKAMS\therefore ");    //amssymb package
+            unicodeToLatex.Add('∵', @"PACKAMS\because ");  //amssymb package
+            unicodeToLatex.Add('⋘', @"PACKAMS\lll ");  //amssymb package
+            unicodeToLatex.Add('⋙', @"PACKAMS\ggg ");  //amssymb package
+            unicodeToLatex.Add('≦', @"PACKAMS\leqq "); //amssymb package
+            unicodeToLatex.Add('≧', @"PACKAMS\geqq "); //amssymb package
+            unicodeToLatex.Add('≲', @"PACKAMS\lesssim ");  //amssymb package
+            unicodeToLatex.Add('≳', @"PACKAMS\gtrsim ");   //amssymb package
+            unicodeToLatex.Add('⋖', @"PACKAMS\lessdot ");  //amssymb package
+            unicodeToLatex.Add('⋗', @"PACKAMS\gtrdot ");   //amssymb package
+            unicodeToLatex.Add('≶', @"PACKAMS\lessgtr ");  //amssymb package
+            unicodeToLatex.Add('⋚', @"PACKAMS\lesseqgtr ");    //amssymb package
+            unicodeToLatex.Add('≷', @"PACKAMS\gtrless ");  //amssymb package
+            unicodeToLatex.Add('⋛', @"PACKAMS\gtreqless ");    //amssymb package
+            unicodeToLatex.Add('≑', @"PACKAMS\doteqdot "); //amssymb package
+            unicodeToLatex.Add('≒', @"PACKAMS\fallingdotseq ");    //amssymb package
+            unicodeToLatex.Add('≓', @"PACKAMS\risingdotseq "); //amssymb package
+            unicodeToLatex.Add('∽', @"PACKAMS\backsim ");  //amssymb package
+            unicodeToLatex.Add('≊', @"PACKAMS\approxeq "); //amssymb package
+            unicodeToLatex.Add('⋍', @"PACKAMS\backsimeq ");  //amssymb package  
+            unicodeToLatex.Add('⋞', @"PACKAMS\curlyeqprec ");  //amssymb package
+            unicodeToLatex.Add('⋟', @"PACKAMS\curlyeqsucc ");  //amssymb package
+            unicodeToLatex.Add('≾', @"PACKAMS\precsim ");  //amssymb package
+            unicodeToLatex.Add('≿', @"PACKAMS\succsim ");  //amssymb package
+            unicodeToLatex.Add('⋜', @"PACKSTX\eqless ");   //stix package
+            unicodeToLatex.Add('⋝', @"PACKSTX\eqgtr ");    //stix package
+            unicodeToLatex.Add('⊲', @"PACKAMS\vartriangleleft ");  //amssymb package
+            unicodeToLatex.Add('⊳', @"PACKAMS\vartriangleright "); //amssymb package
+            unicodeToLatex.Add('⊴', @"PACKAMS\trianglelefteq ");   //amssymb package
+            unicodeToLatex.Add('⊵', @"PACKAMS\trianglerighteq ");  //amssymb package
             unicodeToLatex.Add('⊨', @"\models ");
-            unicodeToLatex.Add('⋐', @"\Subset ");   //amssymb package
-            unicodeToLatex.Add('⋑', @"\Supset ");   //amssymb package
-            unicodeToLatex.Add('⊩', @"\Vdash ");    //amssymb package
-            unicodeToLatex.Add('⊪', @"\Vvdash ");   //amssymb package
-            unicodeToLatex.Add('≖', @"\eqcirc ");   //amssymb package
-            unicodeToLatex.Add('≗', @"\circeq ");   //amssymb package
-            unicodeToLatex.Add('≜', @"\triangleq ");    //amssymb package
-            unicodeToLatex.Add('≏', @"\bumpeq ");   //amssymb package
-            unicodeToLatex.Add('≎', @"\Bumpeq ");   //amssymb package
-            unicodeToLatex.Add('≬', @"\between ");  //amssymb package
-            unicodeToLatex.Add('⋔', @"\pitchfork ");    //amssymb package
+            unicodeToLatex.Add('⋐', @"PACKAMS\Subset ");   //amssymb package
+            unicodeToLatex.Add('⋑', @"PACKAMS\Supset ");   //amssymb package
+            unicodeToLatex.Add('⊩', @"PACKAMS\Vdash ");    //amssymb package
+            unicodeToLatex.Add('⊪', @"PACKAMS\Vvdash ");   //amssymb package
+            unicodeToLatex.Add('≖', @"PACKAMS\eqcirc ");   //amssymb package
+            unicodeToLatex.Add('≗', @"PACKAMS\circeq ");   //amssymb package
+            unicodeToLatex.Add('≜', @"PACKAMS\triangleq ");    //amssymb package
+            unicodeToLatex.Add('≏', @"PACKAMS\bumpeq ");   //amssymb package
+            unicodeToLatex.Add('≎', @"PACKAMS\Bumpeq ");   //amssymb package
+            unicodeToLatex.Add('≬', @"PACKAMS\between ");  //amssymb package
+            unicodeToLatex.Add('⋔', @"PACKAMS\pitchfork ");    //amssymb package
             unicodeToLatex.Add('≐', @"\doteq ");
-            unicodeToLatex.Add('≪', @"\ll ");   //amssymb package
-            unicodeToLatex.Add('≫', @"\gg ");   //amssymb package
-            unicodeToLatex.Add('≤', @"\leq ");  //amssymb package
-            unicodeToLatex.Add('≥', @"\geq ");  //amssymb package
+            unicodeToLatex.Add('≪', @"PACKAMS\ll ");   //amssymb package
+            unicodeToLatex.Add('≫', @"PACKAMS\gg ");   //amssymb package
+            unicodeToLatex.Add('≤', @"PACKAMS\leq ");  //amssymb package
+            unicodeToLatex.Add('≥', @"PACKAMS\geq ");  //amssymb package
             unicodeToLatex.Add('≅', @"\cong ");
             unicodeToLatex.Add('≈', @"\approx ");
             unicodeToLatex.Add('≡', @"\equiv ");
@@ -169,25 +169,25 @@ namespace MathTypeProject
 
             unicodeToLatex.Add('∀', @"\forall ");
             unicodeToLatex.Add('∂', @"\partial ");
-            unicodeToLatex.Add('ð', @"\eth ");  //amssymb package
-            unicodeToLatex.Add('ℇ', @"\mathcal{E} ");   //amssymb package
-            unicodeToLatex.Add('Ϝ', @"\digamma ");  //stix package
-            unicodeToLatex.Add('Ⅎ', @"\Finv "); //stix package
+            unicodeToLatex.Add('ð', @"PACKAMS\eth ");  //amssymb package
+            unicodeToLatex.Add('ℇ', @"PACKAMS\mathcal{E} ");   //amssymb package
+            unicodeToLatex.Add('Ϝ', @"PACKSTX\digamma ");  //stix package
+            unicodeToLatex.Add('Ⅎ', @"PACKSTX\Finv "); //stix package
             unicodeToLatex.Add('ℏ', @"\hbar");
-            unicodeToLatex.Add('℩', @"\turnediota ");   //stix package
+            unicodeToLatex.Add('℩', @"PACKSTX\turnediota ");   //stix package
             unicodeToLatex.Add('ı', @"\imath ");
-            unicodeToLatex.Add('I', @"\topbot ");   //stix package
-            unicodeToLatex.Add('ϰ', @"\varkappa "); //amssymb package
+            unicodeToLatex.Add('I', @"PACKSTX\topbot ");   //stix package
+            unicodeToLatex.Add('ϰ', @"PACKAMS\varkappa "); //amssymb package
             unicodeToLatex.Add('℘', @"\wp ");
-            unicodeToLatex.Add('℧', @"\mho ");  //amssymb package
+            unicodeToLatex.Add('℧', @"PACKAMS\mho ");  //amssymb package
             unicodeToLatex.Add('Å', @"\AA ");
-            unicodeToLatex.Add('℮', @"\textestimated ");    //textcomp package
+            unicodeToLatex.Add('℮', @"PACKTEX\textestimated ");    //textcomp package
             unicodeToLatex.Add('∃', @"\exists ");
-            unicodeToLatex.Add('∄', @"\nexists ");  //amssymb package
+            unicodeToLatex.Add('∄', @"PACKAMS\nexists ");  //amssymb package
             unicodeToLatex.Add('ℵ', @"\aleph ");
-            unicodeToLatex.Add('ℶ', @"\beth "); //amssymb package
-            unicodeToLatex.Add('ℷ', @"\gimel ");    //amssymb package
-            unicodeToLatex.Add('ℸ', @"\daleth ");   //amssymb package
+            unicodeToLatex.Add('ℶ', @"PACKAMS\beth "); //amssymb package
+            unicodeToLatex.Add('ℷ', @"PACKAMS\gimel ");    //amssymb package
+            unicodeToLatex.Add('ℸ', @"PACKAMS\daleth ");   //amssymb package
 
             unicodeToLatex.Add('√', @"\sqrt[]{}");
             unicodeToLatex.Add('∛', @"\cbrt{}");
@@ -195,12 +195,13 @@ namespace MathTypeProject
             unicodeToLatex.Add('/', @"\frac{}{}");
             unicodeToLatex.Add('⁄', @"\frac{}{}");
             unicodeToLatex.Add('□', "expect parenthesis");
-            unicodeToLatex.Add('█', "expect par with at");
+            unicodeToLatex.Add('█', "expect big curly");
             unicodeToLatex.Add('■', "expect matrix");
+            unicodeToLatex.Add('⁡', @" ");    //function control sign
             unicodeToLatex.Add('^', @"^{}");
             unicodeToLatex.Add('_', @"_{}");
             unicodeToLatex.Add('▒', "big operator separator");
-            unicodeToLatex.Add('¦', @"$$$${}\choose{}$$$$");
+            unicodeToLatex.Add('¦', @"{ \choose }");
             unicodeToLatex.Add('〖', @"(");
             unicodeToLatex.Add('〗', @")");
             unicodeToLatex.Add('┴', "text above");  //requires additional definitions
@@ -217,11 +218,13 @@ namespace MathTypeProject
             unicodeToLatex.Add('⌈', @"\lceil ");
             unicodeToLatex.Add('⌉', @"\rceil ");
             unicodeToLatex.Add('‖', @"\|");
-            unicodeToLatex.Add('⟦', @"\lBrack ");   //fdsymbol package
-            unicodeToLatex.Add('⟧', @"\rBrack ");   //fdsymbol package
-            unicodeToLatex.Add('│', @"\vert ");   //fdsymbol package
+            unicodeToLatex.Add('⟦', @"PACKFDS\lBrack ");   //fdsymbol package
+            unicodeToLatex.Add('⟧', @"PACKFDS\rBrack ");   //fdsymbol package
+            unicodeToLatex.Add('│', @"PACKFDS\vert ");   //fdsymbol package
 
             unicodeToLatex.Add('̇', @"\dot{}");
+            unicodeToLatex.Add('̈', @"\ddot{}");
+            unicodeToLatex.Add('⃛', @"\dddot{}");
             unicodeToLatex.Add('̂', @"\hat{}");
             unicodeToLatex.Add('̌', @"\check{}");
             unicodeToLatex.Add('́', @"\acute{}");
@@ -237,16 +240,16 @@ namespace MathTypeProject
             unicodeToLatex.Add('⃡', @"\overleftrightarrow{}");
             unicodeToLatex.Add('⃐', @"\overleftarrow{}");    //harpoon not supported
             unicodeToLatex.Add('⃑', @"\vec{}");    //harpoon not supported
-            unicodeToLatex.Add('▭', @"");    //frame not supported - to frame the entire equation use framed package instead
+            unicodeToLatex.Add('▭', @"PACKFRM");    //frame not supported - to frame the entire equation use framed package instead
             unicodeToLatex.Add('¯', @"\overline{}");
             unicodeToLatex.Add('▁', @"\underline{}");
 
             unicodeToLatex.Add('∅', @"\emptyset ");
             unicodeToLatex.Add('%', @"\% ");
-            unicodeToLatex.Add('°', @"\degree ");   //gensymb package
+            unicodeToLatex.Add('°', @"PACKGEN\degree ");   //gensymb package
             unicodeToLatex.Add('℉', @"^{\circ}F ");
             unicodeToLatex.Add('℃', @"^{\circ}C ");
-            unicodeToLatex.Add('∆', @"\increment ");    //stix package
+            unicodeToLatex.Add('∆', @"PACKSTX\increment ");    //stix package
             unicodeToLatex.Add('∇', @"\nabla ");
             
             unicodeToLatex.Add('←', @"\leftarrow ");
@@ -269,17 +272,17 @@ namespace MathTypeProject
             unicodeToLatex.Add('↖', @"\nwarrow ");
             unicodeToLatex.Add('↘', @"\searrow ");
             unicodeToLatex.Add('↙', @"\swarrow ");
-            unicodeToLatex.Add('↚', @"\nleftarrow ");   //amssymb package
-            unicodeToLatex.Add('↛', @"\nrightarrow ");  //amssymb package
-            unicodeToLatex.Add('↮', @"\nleftrightarrow ");  //amssymb package
-            unicodeToLatex.Add('⇍', @"\nLeftarrow ");   //amssymb package
-            unicodeToLatex.Add('⇏', @"\nRightarrow ");  //amssymb package
-            unicodeToLatex.Add('⇎', @"\nLeftrightarrow ");  //amssymb package
-            unicodeToLatex.Add('⇠', @"\dashleftarrow ");    //amssymb package
-            unicodeToLatex.Add('⇢', @"\dashrightarrow ");   //amssymb package
-            unicodeToLatex.Add('↤', @"\mapsfrom "); //fdsymbol package
+            unicodeToLatex.Add('↚', @"PACKAMS\nleftarrow ");   //amssymb package
+            unicodeToLatex.Add('↛', @"PACKAMS\nrightarrow ");  //amssymb package
+            unicodeToLatex.Add('↮', @"PACKAMS\nleftrightarrow ");  //amssymb package
+            unicodeToLatex.Add('⇍', @"PACKAMS\nLeftarrow ");   //amssymb package
+            unicodeToLatex.Add('⇏', @"PACKAMS\nRightarrow ");  //amssymb package
+            unicodeToLatex.Add('⇎', @"PACKAMS\nLeftrightarrow ");  //amssymb package
+            unicodeToLatex.Add('⇠', @"PACKAMS\dashleftarrow ");    //amssymb package
+            unicodeToLatex.Add('⇢', @"PACKAMS\dashrightarrow ");   //amssymb package
+            unicodeToLatex.Add('↤', @"PACKFDS\mapsfrom "); //fdsymbol package
             unicodeToLatex.Add('↦', @"\mapsto ");
-            unicodeToLatex.Add('⟻', @"\longmapsfrom "); //fdsymbol package
+            unicodeToLatex.Add('⟻', @"PACKFDS\longmapsfrom "); //fdsymbol package
             unicodeToLatex.Add('⟼', @"\longmapsto ");
             unicodeToLatex.Add('↩', @"\hookleftarrow ");
             unicodeToLatex.Add('↪', @"\hookrightarrow ");
@@ -287,72 +290,72 @@ namespace MathTypeProject
             unicodeToLatex.Add('↽', @"\leftharpoondown ");
             unicodeToLatex.Add('⇀', @"\rightharpoonup ");
             unicodeToLatex.Add('⇁', @"\rightharpoondown ");
-            unicodeToLatex.Add('↿', @"\upharpoonleft ");    //amssymb package
-            unicodeToLatex.Add('↾', @"\upharpoonright ");   //amssymb package
-            unicodeToLatex.Add('⇃', @"\downharpoonleft ");  //amssymb package
-            unicodeToLatex.Add('⇂', @"\downharpoonright "); //amssymb package
-            unicodeToLatex.Add('⇋', @"\leftrightharpoons ");    //amssymb package
+            unicodeToLatex.Add('↿', @"PACKAMS\upharpoonleft ");    //amssymb package
+            unicodeToLatex.Add('↾', @"PACKAMS\upharpoonright ");   //amssymb package
+            unicodeToLatex.Add('⇃', @"PACKAMS\downharpoonleft ");  //amssymb package
+            unicodeToLatex.Add('⇂', @"PACKAMS\downharpoonright "); //amssymb package
+            unicodeToLatex.Add('⇋', @"PACKAMS\leftrightharpoons ");    //amssymb package
             unicodeToLatex.Add('⇌', @"\rightleftharpoons ");
-            unicodeToLatex.Add('⇇', @"\leftleftarrows ");   //amssymb package
-            unicodeToLatex.Add('⇉', @"\rightrightarrows "); //amssymb package
-            unicodeToLatex.Add('⇈', @"\upuparrows ");   //amssymb package
-            unicodeToLatex.Add('⇊', @"\downdownarrows ");   //amssymb package
-            unicodeToLatex.Add('⇆', @"\leftrightarrows ");  //amssymb package
-            unicodeToLatex.Add('⇄', @"\rightleftarrows ");  //amssymb package
-            unicodeToLatex.Add('↫', @"\looparrowleft ");    //amssymb package
-            unicodeToLatex.Add('↬', @"\looparrowright ");   //amssymb package
-            unicodeToLatex.Add('↢', @"\leftarrowtail ");    //amssymb package
-            unicodeToLatex.Add('↣', @"\rightarrowtail ");   //amssymb package
-            unicodeToLatex.Add('↰', @"\Lsh ");  //amssymb package
-            unicodeToLatex.Add('↱', @"\Rsh ");  //amssymb package
-            unicodeToLatex.Add('↲', @"\Ldsh "); //fdsymbol package
-            unicodeToLatex.Add('↳', @"\Rdsh "); //fdsymbol package
-            unicodeToLatex.Add('⇚', @"\Lleftarrow ");   //amssymb package
-            unicodeToLatex.Add('⇛', @"\Rrightarrow ");  //amssymb package
-            unicodeToLatex.Add('↞', @"\twoheadleftarrow "); //amssymb package
-            unicodeToLatex.Add('↠', @"\twoheadrightarrow ");    //amssymb package
-            unicodeToLatex.Add('↶', @"\curvearrowleft ");   //amssymb package
-            unicodeToLatex.Add('↷', @"\curvearrowright ");  //amssymb package
-            unicodeToLatex.Add('↺', @"\circlearrowleft ");  //amssymb package
-            unicodeToLatex.Add('↻', @"\circlearrowright "); //amssymb package
-            unicodeToLatex.Add('⊸', @"\multimap "); //amssymb package
-            unicodeToLatex.Add('↭', @"\leftrightwavearrow ");   //fdsymbol package
-            unicodeToLatex.Add('↜', @"\leftwavearrow ");    //fdsymbol package
-            unicodeToLatex.Add('↝', @"\rightwavearrow ");   //fdsymbol package
-            unicodeToLatex.Add('⇜', @"\leftsquigarrow ");    //stix package
-            unicodeToLatex.Add('⇝', @"\rightsquigarrow ");  //stix package
+            unicodeToLatex.Add('⇇', @"PACKAMS\leftleftarrows ");   //amssymb package
+            unicodeToLatex.Add('⇉', @"PACKAMS\rightrightarrows "); //amssymb package
+            unicodeToLatex.Add('⇈', @"PACKAMS\upuparrows ");   //amssymb package
+            unicodeToLatex.Add('⇊', @"PACKAMS\downdownarrows ");   //amssymb package
+            unicodeToLatex.Add('⇆', @"PACKAMS\leftrightarrows ");  //amssymb package
+            unicodeToLatex.Add('⇄', @"PACKAMS\rightleftarrows ");  //amssymb package
+            unicodeToLatex.Add('↫', @"PACKAMS\looparrowleft ");    //amssymb package
+            unicodeToLatex.Add('↬', @"PACKAMS\looparrowright ");   //amssymb package
+            unicodeToLatex.Add('↢', @"PACKAMS\leftarrowtail ");    //amssymb package
+            unicodeToLatex.Add('↣', @"PACKAMS\rightarrowtail ");   //amssymb package
+            unicodeToLatex.Add('↰', @"PACKAMS\Lsh ");  //amssymb package
+            unicodeToLatex.Add('↱', @"PACKAMS\Rsh ");  //amssymb package
+            unicodeToLatex.Add('↲', @"PACKFDS\Ldsh "); //fdsymbol package
+            unicodeToLatex.Add('↳', @"PACKFDS\Rdsh "); //fdsymbol package
+            unicodeToLatex.Add('⇚', @"PACKAMS\Lleftarrow ");   //amssymb package
+            unicodeToLatex.Add('⇛', @"PACKAMS\Rrightarrow ");  //amssymb package
+            unicodeToLatex.Add('↞', @"PACKAMS\twoheadleftarrow "); //amssymb package
+            unicodeToLatex.Add('↠', @"PACKAMS\twoheadrightarrow ");    //amssymb package
+            unicodeToLatex.Add('↶', @"PACKAMS\curvearrowleft ");   //amssymb package
+            unicodeToLatex.Add('↷', @"PACKAMS\curvearrowright ");  //amssymb package
+            unicodeToLatex.Add('↺', @"PACKAMS\circlearrowleft ");  //amssymb package
+            unicodeToLatex.Add('↻', @"PACKAMS\circlearrowright "); //amssymb package
+            unicodeToLatex.Add('⊸', @"PACKAMS\multimap "); //amssymb package
+            unicodeToLatex.Add('↭', @"PACKFDS\leftrightwavearrow ");   //fdsymbol package
+            unicodeToLatex.Add('↜', @"PACKFDS\leftwavearrow ");    //fdsymbol package
+            unicodeToLatex.Add('↝', @"PACKFDS\rightwavearrow ");   //fdsymbol package
+            unicodeToLatex.Add('⇜', @"PACKSTX\leftsquigarrow ");    //stix package
+            unicodeToLatex.Add('⇝', @"PACKSTX\rightsquigarrow ");  //stix package
 
-            unicodeToLatex.Add('⊈', @"\nsubseteq ");    //amssymb package
-            unicodeToLatex.Add('⊉', @"\nsupseteq ");    //amssymb package
-            unicodeToLatex.Add('⊊', @"\subsetneq ");    //amssymb package
-            unicodeToLatex.Add('⊋', @"\supsetneq ");    //amssymb package
-            unicodeToLatex.Add('⋢', @"\nsqsubseteq ");  //fdsymbol package
-            unicodeToLatex.Add('⋣', @"\nsqsupseteq ");  //fdsymbol package
-            unicodeToLatex.Add('⋦', @"\lnsim ");    //amssymb package
-            unicodeToLatex.Add('⋧', @"\gnsim ");    //amssymb package
-            unicodeToLatex.Add('⋨', @"\precnsim "); //amssymb package
-            unicodeToLatex.Add('⋩', @"\succnsim "); //amssymb package
-            unicodeToLatex.Add('⋪', @"\nlessclosed ");  //fdsymbol package
-            unicodeToLatex.Add('⋫', @"\ngtrclosed ");   //fdsymbol package
-            unicodeToLatex.Add('⋬', @"\nleqclosed ");   //fdsymbol package
-            unicodeToLatex.Add('⋭', @"\ngeqclosed ");   //fdsymbol package
-            unicodeToLatex.Add('∤', @"\nmid "); //amssymb package
-            unicodeToLatex.Add('∦', @"\nparallel ");    //amssymb package
-            unicodeToLatex.Add('⊬', @"\nvdash ");   //amssymb package
-            unicodeToLatex.Add('⊭', @"\nvDash ");   //amssymb package
-            unicodeToLatex.Add('⊮', @"\nrightVdash ");   //fdsymbol package
-            unicodeToLatex.Add('⊯', @"\nrightVDash ");  //fdsymbol package
-            unicodeToLatex.Add('≁', @"\nsim "); //amssymb package
-            unicodeToLatex.Add('≭', @"\nasymp ");   //fdsymbol package
-            unicodeToLatex.Add('≨', @"\lneqq ");    //amssymb package
-            unicodeToLatex.Add('≩', @"\gneqq ");    //amssymb package
-            unicodeToLatex.Add('⊀', @"\nprec ");    //amssymb package
-            unicodeToLatex.Add('⊁', @"\nsucc ");    //amssymb package
-            unicodeToLatex.Add('⋠', @"\npreccurlyeq "); //fdsymbol package
-            unicodeToLatex.Add('⋡', @"\nsucccurlyeq "); //fdsymbol package
+            unicodeToLatex.Add('⊈', @"PACKAMS\nsubseteq ");    //amssymb package
+            unicodeToLatex.Add('⊉', @"PACKAMS\nsupseteq ");    //amssymb package
+            unicodeToLatex.Add('⊊', @"PACKAMS\subsetneq ");    //amssymb package
+            unicodeToLatex.Add('⊋', @"PACKAMS\supsetneq ");    //amssymb package
+            unicodeToLatex.Add('⋢', @"PACKFDS\nsqsubseteq ");  //fdsymbol package
+            unicodeToLatex.Add('⋣', @"PACKFDS\nsqsupseteq ");  //fdsymbol package
+            unicodeToLatex.Add('⋦', @"PACKAMS\lnsim ");    //amssymb package
+            unicodeToLatex.Add('⋧', @"PACKAMS\gnsim ");    //amssymb package
+            unicodeToLatex.Add('⋨', @"PACKAMS\precnsim "); //amssymb package
+            unicodeToLatex.Add('⋩', @"PACKAMS\succnsim "); //amssymb package
+            unicodeToLatex.Add('⋪', @"PACKFDS\nlessclosed ");  //fdsymbol package
+            unicodeToLatex.Add('⋫', @"PACKFDS\ngtrclosed ");   //fdsymbol package
+            unicodeToLatex.Add('⋬', @"PACKFDS\nleqclosed ");   //fdsymbol package
+            unicodeToLatex.Add('⋭', @"PACKFDS\ngeqclosed ");   //fdsymbol package
+            unicodeToLatex.Add('∤', @"PACKAMS\nmid "); //amssymb package
+            unicodeToLatex.Add('∦', @"PACKAMS\nparallel ");    //amssymb package
+            unicodeToLatex.Add('⊬', @"PACKAMS\nvdash ");   //amssymb package
+            unicodeToLatex.Add('⊭', @"PACKAMS\nvDash ");   //amssymb package
+            unicodeToLatex.Add('⊮', @"PACKFDS\nrightVdash ");   //fdsymbol package
+            unicodeToLatex.Add('⊯', @"PACKFDS\nrightVDash ");  //fdsymbol package
+            unicodeToLatex.Add('≁', @"PACKAMS\nsim "); //amssymb package
+            unicodeToLatex.Add('≭', @"PACKFDS\nasymp ");   //fdsymbol package
+            unicodeToLatex.Add('≨', @"PACKAMS\lneqq ");    //amssymb package
+            unicodeToLatex.Add('≩', @"PACKAMS\gneqq ");    //amssymb package
+            unicodeToLatex.Add('⊀', @"PACKAMS\nprec ");    //amssymb package
+            unicodeToLatex.Add('⊁', @"PACKAMS\nsucc ");    //amssymb package
+            unicodeToLatex.Add('⋠', @"PACKFDS\npreccurlyeq "); //fdsymbol package
+            unicodeToLatex.Add('⋡', @"PACKFDS\nsucccurlyeq "); //fdsymbol package
             unicodeToLatex.Add('∌', @"\notcontain ");
-            unicodeToLatex.Add('⊄', @"\nsubset ");  //fdsymbol package
-            unicodeToLatex.Add('⊅', @"\nsupset ");  //fdsymbol package
+            unicodeToLatex.Add('⊄', @"PACKFDS\nsubset ");  //fdsymbol package
+            unicodeToLatex.Add('⊅', @"PACKFDS\nsupset ");  //fdsymbol package
 
             unicodeToLatex.Add('¬', @"\neg ");
 
@@ -415,18 +418,18 @@ namespace MathTypeProject
             unicodeToLatex.Add('·', @"\cdot ");
             unicodeToLatex.Add('⋮', @"\vdots ");
             unicodeToLatex.Add('⋯', @"\cdots ");
-            unicodeToLatex.Add('⋰', @"\udots ");    //fdsymbol package
+            unicodeToLatex.Add('⋰', @"PACKFDS\udots ");    //fdsymbol package
             unicodeToLatex.Add('⋱', @"\ddots ");
-            unicodeToLatex.Add('∎', @"\blacksquare ");   //amssymb package
-            unicodeToLatex.Add('∟', @"\rightangle ");   //fdsymbol package
+            unicodeToLatex.Add('∎', @"PACKAMS\blacksquare ");   //amssymb package
+            unicodeToLatex.Add('∟', @"PACKFDS\rightangle ");   //fdsymbol package
             unicodeToLatex.Add('∠', @"\angle ");
-            unicodeToLatex.Add('∡', @"\measuredangle ");    //amssymb package
-            unicodeToLatex.Add('∢', @"\sphericalangle ");   //amssymb package
-            unicodeToLatex.Add('⊾', @"\measuredrightangle ");   //fdsymbol package
-            unicodeToLatex.Add('⊿', @"\varlrtriangle ");    //stix package
-            unicodeToLatex.Add('⋕', @"\equalparallel"); //stix package
-            unicodeToLatex.Add('∶', @"\ratio ");    //colonequals package
-            unicodeToLatex.Add('∷', @"\squaredots "); //fdsymbol package
+            unicodeToLatex.Add('∡', @"PACKAMS\measuredangle ");    //amssymb package
+            unicodeToLatex.Add('∢', @"PACKAMS\sphericalangle ");   //amssymb package
+            unicodeToLatex.Add('⊾', @"PACKFDS\measuredrightangle ");   //fdsymbol package
+            unicodeToLatex.Add('⊿', @"PACKSTX\varlrtriangle ");    //stix package
+            unicodeToLatex.Add('⋕', @"PACKSTX\equalparallel"); //stix package
+            unicodeToLatex.Add('∶', @"PACKCOL\ratio ");    //colonequals package
+            unicodeToLatex.Add('∷', @"PACKFDS\squaredots "); //fdsymbol package
 
         }
     }
