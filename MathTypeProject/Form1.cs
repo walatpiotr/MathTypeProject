@@ -13,6 +13,7 @@ namespace MathTypeProject
     public partial class EquationToLaTeXConverter : Form
     {
         public static string passingText;
+        public int amount = 0;
         public EquationToLaTeXConverter()
         {
             InitializeComponent();
@@ -51,11 +52,43 @@ namespace MathTypeProject
         private void ConvertButton_Click(object sender, EventArgs e)
         {
             string passingText = textBox1.Text;
-            FileTypeChooser program = new FileTypeChooser(passingText);
+            if (checkBox1.Checked == true)
+            {
+                FileTypeChooser program = new FileTypeChooser(passingText, this);
+
+            }
+            else
+            {
+                FileTypeChooser program = new FileTypeChooser(passingText, this);
+            }
+
+
+            
+            
+
+
+
+            
             
         }
 
         private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+            
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
 
         }

@@ -15,7 +15,8 @@ namespace MathTypeProject
         static void Main(string[] args)
         {
             Application.EnableVisualStyles();
-            Application.Run(new EquationToLaTeXConverter());
+            EquationToLaTeXConverter mainForm = new EquationToLaTeXConverter();
+            Application.Run(mainForm);
           
 
         }

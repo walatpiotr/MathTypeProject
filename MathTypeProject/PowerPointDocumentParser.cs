@@ -7,6 +7,7 @@ using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using System.IO;
 using System.Windows.Forms;
 using System.Threading;
+using Microsoft.Office.Core;
 
 namespace MathTypeProject
 {
@@ -18,10 +19,11 @@ namespace MathTypeProject
         Microsoft.Office.Interop.PowerPoint.Presentation pptOpen;
         public List<Object> mathTypeEquations = new List<Object>();
         PowerPoint.Slides slides;
+        EquationToLaTeXConverter form;
 
-        public PowerPointDocumentParser(string inputFilePath)
+        public PowerPointDocumentParser(string inputFilePath, EquationToLaTeXConverter form)
         {
-
+            this.form = form;
 
             char[] separator = { '\\' };
             string[] directories = inputFilePath.Split(separator, StringSplitOptions.RemoveEmptyEntries);
@@ -37,14 +39,24 @@ namespace MathTypeProject
 
             
             this.app = new PowerPoint.Application();
+
             
 
             object isVisible = true;
             File.SetAttributes(inputFilePath, FileAttributes.Normal);
+            if (form.checkBox1.Checked == false)
+            {
+                pptOpen = this.app.Presentations.Open(inputFilePath, MsoTriState.msoFalse, MsoTriState.msoFalse,
+                WithWindow: MsoTriState.msoFalse); 
+            }
+            if (form.checkBox1.Checked == true)
+            {
+                pptOpen = this.app.Presentations.Open(inputFilePath, MsoTriState.msoTrue, MsoTriState.msoTrue,
+                WithWindow: MsoTriState.msoTrue);
+            }
 
-            pptOpen = this.app.Presentations.Open(inputFilePath); // -- , Visible: isVisible
-            //pptOpen.Activate();
-            this.slides = pptOpen.Slides;
+                //pptOpen.Activate();
+                this.slides = pptOpen.Slides;
         }
 
 
@@ -66,24 +78,26 @@ namespace MathTypeProject
                                 {
 
 
-                                    try
+                                try
+                                {
+                                    int count = slide.NotesPage.Shapes.Count;//--[2].TextFrame2.TextRange.MathZones.get_MathZones();
+                                    Console.WriteLine(count.ToString());
+                                    var strObj = slide.NotesPage.Shapes[2].TextFrame2.TextRange.MathZones.get_MathZones();
+                                    for (int i = 0; i<slide.NotesPage.Shapes.Count; i++)
                                     {
-                                        int count = slide.NotesPage.Shapes.Count;//--[2].TextFrame2.TextRange.MathZones.get_MathZones();
-                                        Console.WriteLine(count.ToString());
-                                        var strObj = slide.NotesPage.Shapes[2].TextFrame2.TextRange.MathZones.get_MathZones();
-                                        
+                                        Console.WriteLine(slide.NotesPage.Shapes[i].Type);
+                                    }
                                         Console.WriteLine("Skopiował jebaniec");
                                         if (strObj != null)
                                         {
-                                            Task.Delay(500);
-                                            Console.WriteLine("Nie jest null!");
+                                            
                                             PowerPoint.Shape shape = slide.NotesPage.Shapes[2];
                                             Console.WriteLine("Nie jest null!");
 
                                             //shape.TextFrame2.TextRange.HighlightColorIndex = PowerPoint.WdColorIndex.wdYellow;
-                                            strObj.Select();
+                                            //strObj.Select();
                                             Console.WriteLine("Selected");
-                                            shape.TextFrame2.TextRange.Application.Selection.Copy();
+                                            //strObj.Copy();
                                      
                                             Console.WriteLine("Skopiował");
                                             String tekst = Clipboard.GetText();

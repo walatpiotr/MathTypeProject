@@ -9,6 +9,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Threading;
 
+
 namespace MathTypeProject
 {
     internal class WordDocumentParser : OfficeDocumentParser
@@ -21,10 +22,13 @@ namespace MathTypeProject
         Word.Range myRange;
         private List<string> packages = new List<string>();
         private Dictionary<string, string> packageDictionary = new Dictionary<string, string>();
+        EquationToLaTeXConverter form;
+        bool visible = false;
+        string second_file_path;
 
-
-        public WordDocumentParser(string inputFilePath)
+        public WordDocumentParser(string inputFilePath, EquationToLaTeXConverter form)
         {
+            this.form = form;
             char[] separator = { '\\' };
             string[] directories = inputFilePath.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             string dir = "";
@@ -36,7 +40,30 @@ namespace MathTypeProject
             this.inputFileName = directories[directories.Length - 1];
             Console.WriteLine(inputFileName);
             this.app = new Word.Application();
-            this.docOpen = app.Documents.Open(inputFilePath);
+            
+            
+
+            if (form.checkBox1.Checked == true)
+            {
+                this.app.Visible = true;
+                Console.WriteLine("pokazuje");
+                this.visible = true;
+
+            }
+            if (form.checkBox1.Checked == false)
+            {
+                this.app.Visible = false;
+                //this.app.DisplayAlerts = 0;
+                Console.WriteLine("nie pokazuje");
+                this.visible = false;
+            }
+
+            
+
+            this.docOpen = app.Documents.Open(inputFilePath, Visible: visible);
+
+           
+
             this.myRange = docOpen.Range();
 
             packageDictionary.Add("AMS", @"\usepackage{amssymb}");
@@ -50,9 +77,22 @@ namespace MathTypeProject
 
             object isVisible = true;
             File.SetAttributes(inputFilePath, FileAttributes.Normal);
-
-            docOpen = this.app.Documents.Open(inputFilePath, Visible: isVisible);
+            this.second_file_path = this.inputFileDir + @"\ConvertResult.docx";
             docOpen.Activate();
+            /*if(form.checkBox2.Checked == false)
+            {
+                myRange.Copy();
+                docOpen.Close();
+                
+                this.docOpen = app.Documents.Open(second_file_path, Visible: visible, ReadOnly: false);
+                docOpen.Range().Paste();
+                docOpen.SaveAs();
+                docOpen.Close();
+                
+
+                this.docOpen = app.Documents.Open(second_file_path, Visible: visible);
+                this.myRange = docOpen.Range();
+            }*/
         }
 
         public void findMathTypeEquations()
@@ -62,23 +102,30 @@ namespace MathTypeProject
             {
                 Console.WriteLine(shape.TextFrame);
             }
-            Thread staThread = new Thread(
-            delegate ()
+
+            int OMathsCount = myRange.OMaths.Count;
+            Console.WriteLine(OMathsCount);
+            Console.WriteLine("Bar max:");
+
+            form.progressBar1.Maximum = OMathsCount;
+
+
+            try
             {
-                try
+                String clipboard_memory = Clipboard.GetText();
+                Word.Range endRange = docOpen.Range(myRange.End - 1, myRange.End - 1);
+
+
+
+                if (OMathsCount > 0)
                 {
-                    String clipboard_memory = Clipboard.GetText();
-                    Word.Range endRange = docOpen.Range(myRange.End - 1, myRange.End - 1);
-
-                    int OMathsCount = myRange.OMaths.Count;
-                    Console.WriteLine(OMathsCount);
-
-                    if (OMathsCount > 0)
+                    string temp_file_path = this.inputFileDir + @"\EquationTemporaryFile.txt";
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(temp_file_path))
                     {
-                        string temp_file_path = this.inputFileDir + @"\EquationTemporaryFile.txt";
-                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(temp_file_path))
+                        for(int i=0; i<OMathsCount; i++)
                         {
-                            while (myRange.OMaths.Count != 0)
+                            Thread staThread = new Thread(
+                            delegate ()
                             {
                                 Word.OMath currentEquation = myRange.OMaths[1];
 
@@ -100,7 +147,7 @@ namespace MathTypeProject
                                 string[] parsed = TranslateTokensToTex(tokens);
                                 for(int p = 0; p < parsed.Length; p++)
                                 {
-                                    Console.Write(parsed[p]+"^.^");
+                                    Console.Write(parsed[p] + "^.^");
                                 }
                                 Console.WriteLine("---------------------------------------------------");
                                 for (int p = 0; p < parsed.Length; p++)
@@ -127,14 +174,22 @@ namespace MathTypeProject
                                 }
 
                                 //removing text from start to end
-                               
+
                                 int start = currentEquation.Range.Start;
                                 int end = currentEquation.Range.End;
                                 currentEquation.Range.Application.Selection.Delete();
+
                                 if(new_tekst != "$$$$")
                                 {
                                     currentEquation.Range.InsertBefore(new_tekst);
                                 }
+
+                            });
+            
+                            staThread.SetApartmentState(ApartmentState.STA);
+                            staThread.Start();
+                            staThread.Join();
+                            form.progressBar1.PerformStep();
                             }
                         }
                     }
@@ -142,6 +197,17 @@ namespace MathTypeProject
                     {
                         MessageBox.Show("No equations found.");
                     }
+
+					if (form.checkBox2.Checked == false)
+					{
+						docOpen.SaveAs(second_file_path);
+					}
+					else
+					{
+						docOpen.SaveAs();
+					}
+					docOpen.Close();
+					app.Quit();
 
                     string final_message = "Process Completed\n\n";
                     if(packages.Count != 0)
@@ -154,15 +220,13 @@ namespace MathTypeProject
                         }
                     }
                     MessageBox.Show(final_message);
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-            });
-            staThread.SetApartmentState(ApartmentState.STA);
-            staThread.Start();
-            staThread.Join();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
 
         }
         private string[] TranslateTokensToTex(char[] tokens)
@@ -997,6 +1061,14 @@ namespace MathTypeProject
             else if (parsed[index] != @"" && Char.IsLetter(parsed[index].ToCharArray()[0]))
             {
                 return ParseLetter(ref parsed, index);
+            }
+            else if (parsed[index] == @"^{}" || parsed[index] == @"_{}")
+            {
+                return parseSubSup(ref parsed, index);
+            }
+            else if (parsed[index] == "big operator separator")
+            {
+                return @"";
             }
             else
             {
