@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace MathTypeProject
         Microsoft.Office.Interop.Word.Document docOpen;
         public List<Object> mathTypeEquations = new List<Object>();
         Word.Range myRange;
+        private List<string> packages = new List<string>();
+        private Dictionary<string, string> packageDictionary = new Dictionary<string, string>();
 
 
         public WordDocumentParser(string inputFilePath)
@@ -35,6 +38,15 @@ namespace MathTypeProject
             this.app = new Word.Application();
             this.docOpen = app.Documents.Open(inputFilePath);
             this.myRange = docOpen.Range();
+
+            packageDictionary.Add("AMS", @"\usepackage{amssymb}");
+            packageDictionary.Add("INT", @"\usepackage{esint}");
+            packageDictionary.Add("FDS", @"\usepackage{fdsymbol}");
+            packageDictionary.Add("STX", @"\usepackage{stix}");
+            packageDictionary.Add("TEX", @"\usepackage{textcomp}");
+            packageDictionary.Add("GEN", @"\usepackage{gensymb}");
+            packageDictionary.Add("COL", @"\usepackage{colonequals}");
+            packageDictionary.Add("FRM", @"\usepackage{framed}");
 
             object isVisible = true;
             File.SetAttributes(inputFilePath, FileAttributes.Normal);
@@ -131,7 +143,17 @@ namespace MathTypeProject
                         MessageBox.Show("No equations found.");
                     }
 
-                    MessageBox.Show("Process Completed");
+                    string final_message = "Process Completed\n\n";
+                    if(packages.Count != 0)
+                    {
+                        final_message += "Additional packages required for further use:\n";
+                        foreach (string pack in packages)
+                        {
+                            final_message += pack;
+                            final_message += "\n";
+                        }
+                    }
+                    MessageBox.Show(final_message);
                 }
                 catch (Exception)
                 {
@@ -822,9 +844,117 @@ namespace MathTypeProject
             return parsed[index];
         }
 
+        private string ParseParenthesisOperator(ref string[] parsed, int index)
+        {
+            if (index + 7 < parsed.Length && parsed[index+1] == "(" && parsed[index+2] == "2" && parsed[index+3] == "4" && parsed[index+4] == "&")
+            {
+                parsed[index] = @"\, d" + parsed[index + 6];
+                for (int i = index + 1; i <= index + 7; i++)
+                {
+                    parsed[i] = @"";
+                }
+            }
+            else if (index + 6 < parsed.Length && parsed[index+1] == "(")
+            {
+                int par_count = 1;
+                int temp_idx = index + 2;
+
+                while(par_count != 0)
+                {
+                    if (parsed[temp_idx] == "(")
+                    {
+                        par_count++;
+                    }
+                    else if (parsed[temp_idx] == ")")
+                    {
+                        par_count--;
+                    }
+                    else if (parsed[temp_idx] == "text above" || parsed[temp_idx] == "text below")
+                    {
+                        parsed[temp_idx] = ParseAboveBelow(ref parsed, temp_idx);
+                        break;
+                    }
+                    temp_idx++;
+                }
+
+                parsed[index] = @"";
+            }
+            else
+            {
+                parsed[index] = @"";
+            }
+            return parsed[index];
+        }
+
+        private string ParseAboveBelow(ref string[] parsed, int index)
+        {
+            return "lol";
+        }
+
+        private string ParseBigCurly(ref string[] parsed, int index)
+        {
+            parsed[index - 1] = @"";
+            parsed[index] = @"\begin{cases} ";
+            parsed[index + 1] = @"";
+            int temp_idx = index + 2;
+            int par_count = 1;
+            while (!(par_count == 1 && parsed[temp_idx - 1] == ")"))
+            {
+                int i = temp_idx;
+                while (parsed[temp_idx] != "&" && parsed[temp_idx] != "@" && !(par_count == 1 && parsed[temp_idx] == ")"))
+                {
+                    if (parsed[temp_idx] == "(")
+                    {
+                        par_count++;
+                    }
+                    else if (parsed[temp_idx] == ")")
+                    {
+                        par_count--;
+                    }
+                    else
+                    {
+                        parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
+                    }
+                    temp_idx++;
+                }
+                for (; i < temp_idx; i++)
+                {
+                    parsed[index] += parsed[i];
+                    parsed[i] = @"";
+                }
+                if (parsed[temp_idx] == "&")
+                {
+                    parsed[index] += " ";
+                    parsed[index] += parsed[temp_idx];
+                    parsed[temp_idx] = @"";
+                    parsed[index] += " ";
+                }
+                else if (parsed[temp_idx] == "@")
+                {
+                    parsed[index] += @"\\ ";
+                    parsed[temp_idx] = @"";
+                }
+                temp_idx++;
+            }
+            parsed[index] += @" \end{cases}";
+            parsed[temp_idx - 1] = @"";
+            parsed[temp_idx] = @"";
+            return parsed[index];
+        }
+
         private string ParseToken(ref string[] parsed, int index)
         {
-            if (parsed[index] == @"\sqrt[]{}")
+            Regex package_header = new Regex(@"^PACK[A-Z]{3}.*$");
+            if(package_header.IsMatch(parsed[index]))
+            {
+                string package = parsed[index].Substring(4, 3);
+
+                packages.Add(packageDictionary[package]);
+
+                parsed[index] = parsed[index].Substring(7, parsed[index].Length - 7);
+                return ParseToken(ref parsed, index);
+            }
+            else if (parsed[index] == @"\sqrt[]{}")
             {
                 return ParseSqrt(ref parsed, index);
             }
@@ -851,6 +981,14 @@ namespace MathTypeProject
             else if (parsed[index] == "expect matrix")
             {
                 return ParseMatrix(ref parsed, index);
+            }
+            else if (parsed[index] == "expect parenthesis")
+            {
+                return ParseParenthesisOperator(ref parsed, index);
+            }
+            else if (parsed[index] == "expect big curly")
+            {
+                return ParseBigCurly(ref parsed, index);
             }
             else if (BackwardsRequired(parsed[index]))
             {
