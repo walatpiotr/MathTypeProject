@@ -21,6 +21,8 @@ namespace MathTypeProject
         Word.Range myRange;
         EquationToLaTeXConverter form;
         bool visible = false;
+        string second_file_path;
+
 
 
         public WordDocumentParser(string inputFilePath, EquationToLaTeXConverter form)
@@ -38,6 +40,7 @@ namespace MathTypeProject
             Console.WriteLine(inputFileName);
             this.app = new Word.Application();
             
+            
 
             if (form.checkBox1.Checked == true)
             {
@@ -53,16 +56,33 @@ namespace MathTypeProject
                 Console.WriteLine("nie pokazuje");
                 this.visible = false;
             }
+
+            
+
             this.docOpen = app.Documents.Open(inputFilePath, Visible: visible);
 
            
 
             this.myRange = docOpen.Range();
 
-            object isVisible = true;
+            
             File.SetAttributes(inputFilePath, FileAttributes.Normal);
-
+            this.second_file_path = this.inputFileDir + @"\ConvertResult.docx";
             docOpen.Activate();
+            /*if(form.checkBox2.Checked == false)
+            {
+                myRange.Copy();
+                docOpen.Close();
+                
+                this.docOpen = app.Documents.Open(second_file_path, Visible: visible, ReadOnly: false);
+                docOpen.Range().Paste();
+                docOpen.SaveAs();
+                docOpen.Close();
+                
+
+                this.docOpen = app.Documents.Open(second_file_path, Visible: visible);
+                this.myRange = docOpen.Range();
+            }*/
         }
 
         public void findMathTypeEquations()
@@ -154,6 +174,15 @@ namespace MathTypeProject
                 else
                 {
                     MessageBox.Show("No equations found.");
+                }
+                
+                if (form.checkBox2.Checked == false)
+                {
+                    docOpen.SaveAs(second_file_path);
+                }
+                else
+                {
+                    docOpen.SaveAs();
                 }
                 docOpen.Close();
                 app.Quit();
