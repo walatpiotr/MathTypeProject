@@ -77,7 +77,7 @@ namespace MathTypeProject
 
             object isVisible = true;
             File.SetAttributes(inputFilePath, FileAttributes.Normal);
-            this.second_file_path = this.inputFileDir + @"\ConvertResult.docx";
+            this.second_file_path = this.inputFileDir + this.inputFileName.Substring(0, inputFileName.Length - (inputFileName.IndexOf('.') - 1)) + @"_converted.docx";
             docOpen.Activate();
             /*if(form.checkBox2.Checked == false)
             {
@@ -1064,7 +1064,7 @@ namespace MathTypeProject
             }
             else if (parsed[index] == @"^{}" || parsed[index] == @"_{}")
             {
-                return parseSubSup(ref parsed, index);
+                return ParseSubSup(ref parsed, index);
             }
             else if (parsed[index] == "big operator separator")
             {
