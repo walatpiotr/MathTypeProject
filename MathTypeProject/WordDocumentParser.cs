@@ -77,7 +77,7 @@ namespace MathTypeProject
 
             object isVisible = true;
             File.SetAttributes(inputFilePath, FileAttributes.Normal);
-            this.second_file_path = this.inputFileDir + this.inputFileName.Substring(0, inputFileName.Length - (inputFileName.IndexOf('.') - 1)) + @"_converted.docx";
+            this.second_file_path = this.inputFileDir + this.inputFileName.Substring(0, inputFileName.IndexOf('.')) + @"_converted.docx";
             docOpen.Activate();
             /*if(form.checkBox2.Checked == false)
             {
@@ -748,34 +748,42 @@ namespace MathTypeProject
         private string ParseMatrix(ref string[] parsed, int index)
         {
             string ending;
-            switch (parsed[index-1])
+            if(index != 0)
             {
-                case "(":
-                    parsed[index] = @"\begin{pmatrix} ";
-                    ending = @" \end{pmatrix}";
-                    break;
-                case "[":
-                    parsed[index] = @"\begin{bmatrix} ";
-                    ending = @" \end{bmatrix}";
-                    break;
-                case @"\{":
-                    parsed[index] = @"\begin{Bmatrix} ";
-                    ending = @" \end{Bmatrix}";
-                    break;
-                case "|":
-                    parsed[index] = @"\begin{vmatrix} ";
-                    ending = @" \end{vmatrix}";
-                    break;
-                case @"\|":
-                    parsed[index] = @"\begin{Vmatrix} ";
-                    ending = @" \end{Vmatrix}";
-                    break;
-                default:
-                    parsed[index] = @"\begin{matrix} ";
-                    ending = @" \end{matrix}";
-                    break;
+                switch (parsed[index - 1])
+                {
+                    case "(":
+                        parsed[index] = @"\begin{pmatrix} ";
+                        ending = @" \end{pmatrix}";
+                        break;
+                    case "[":
+                        parsed[index] = @"\begin{bmatrix} ";
+                        ending = @" \end{bmatrix}";
+                        break;
+                    case @"\{":
+                        parsed[index] = @"\begin{Bmatrix} ";
+                        ending = @" \end{Bmatrix}";
+                        break;
+                    case "|":
+                        parsed[index] = @"\begin{vmatrix} ";
+                        ending = @" \end{vmatrix}";
+                        break;
+                    case @"\|":
+                        parsed[index] = @"\begin{Vmatrix} ";
+                        ending = @" \end{Vmatrix}";
+                        break;
+                    default:
+                        parsed[index] = @"\begin{matrix} ";
+                        ending = @" \end{matrix}";
+                        break;
+                }
+                parsed[index - 1] = @"";
             }
-            parsed[index - 1] = @"";
+            else
+            {
+                parsed[index] = @"\begin{matrix} ";
+                ending = @" \end{matrix}";
+            }
 
             parsed[index + 1] = @"";
             int temp_idx = index + 2;
@@ -820,7 +828,10 @@ namespace MathTypeProject
             }
             parsed[index] += ending;
             parsed[temp_idx - 1] = @"";
-            parsed[temp_idx] = @"";
+            if(temp_idx < parsed.Length)
+            {
+                parsed[temp_idx] = @"";
+            }  
             return parsed[index];
         }
 
@@ -1012,8 +1023,12 @@ namespace MathTypeProject
             if(package_header.IsMatch(parsed[index]))
             {
                 string package = parsed[index].Substring(4, 3);
+                package = packageDictionary[package];
 
-                packages.Add(packageDictionary[package]);
+                if (!(packages.Contains(package)))
+                {
+                    packages.Add(package);
+                }
 
                 parsed[index] = parsed[index].Substring(7, parsed[index].Length - 7);
                 return ParseToken(ref parsed, index);
