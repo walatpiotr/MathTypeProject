@@ -431,6 +431,7 @@ namespace MathTypeProject
             unicodeToLatex.Add('∶', @"PACKCOL\ratio ");    //colonequals package
             unicodeToLatex.Add('∷', @"PACKFDS\squaredots "); //fdsymbol package
 
+            unicodeToLatex.Add('"', @"''");
         }
     }
 }

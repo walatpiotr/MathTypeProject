@@ -122,74 +122,98 @@ namespace MathTypeProject
                     string temp_file_path = this.inputFileDir + @"\EquationTemporaryFile.txt";
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(temp_file_path))
                     {
-                        for(int i=0; i<OMathsCount; i++)
+                        int offset = 1;
+                        bool empty_eq_fl;
+                        bool break_for_fl = false;
+                        for(int i=0; i < OMathsCount && offset <= myRange.OMaths.Count; i++)
                         {
+                            empty_eq_fl = true;
                             Thread staThread = new Thread(
                             delegate ()
                             {
-                                Word.OMath currentEquation = myRange.OMaths[1];
-
-                                currentEquation.Range.Select();
-
-                                currentEquation.Range.TextRetrievalMode.IncludeHiddenText = true;
-                                currentEquation.Range.TextRetrievalMode.IncludeFieldCodes = true;
-
-                                currentEquation.Range.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
-
-                                currentEquation.Range.Application.Selection.Copy();
-
-
-                                String tekst = Clipboard.GetText();
-                                String new_tekst = "$$";
-                                /////////////////////////////////////////////////////////////////////////////////////
-
-                                char[] tokens = tekst.ToCharArray();
-                                string[] parsed = TranslateTokensToTex(tokens);
-                                for(int p = 0; p < parsed.Length; p++)
+                                Word.OMath currentEquation = myRange.OMaths[offset];
+                                while (empty_eq_fl)
                                 {
-                                    Console.Write(parsed[p] + "^.^");
-                                }
-                                Console.WriteLine("---------------------------------------------------");
-                                for (int p = 0; p < parsed.Length; p++)
-                                {
-                                    parsed[p] = ParseToken(ref parsed, p);
-                                }
-                                for (int p = 0; p < parsed.Length; p++)
-                                {
-                                    if(parsed[p] != @"")
+                                    try
                                     {
-                                        new_tekst += parsed[p];
-                                    }       
+                                        currentEquation.Range.Select();
+
+                                        currentEquation.Range.TextRetrievalMode.IncludeHiddenText = true;
+                                        currentEquation.Range.TextRetrievalMode.IncludeFieldCodes = true;
+
+                                        currentEquation.Range.Application.Selection.Copy();
+                                        empty_eq_fl = false;
+                                    }
+                                    catch (System.Runtime.InteropServices.COMException ex)
+                                    {
+                                        if (offset <= myRange.OMaths.Count - 1)
+                                        {
+                                            offset++;
+                                            currentEquation = myRange.OMaths[offset];
+                                        }
+                                        else
+                                        {
+                                            break_for_fl = true;
+                                            break;
+                                        }
+                                    }
                                 }
-                                new_tekst += "$$";
-                                /////////////////////////////////////////////////////////////////////////////////////
-                                file.WriteLine(tekst);
-                                if (clipboard_memory.CompareTo("") != 0)
+                                if (!break_for_fl)
                                 {
-                                    Clipboard.SetText(clipboard_memory);
+                                    currentEquation.Range.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
+                                    String tekst = Clipboard.GetText();
+                                    String new_tekst = "$$";
+                                    /////////////////////////////////////////////////////////////////////////////////////
+
+                                    char[] tokens = tekst.ToCharArray();
+                                    string[] parsed = TranslateTokensToTex(tokens);
+                                    for (int p = 0; p < parsed.Length; p++)
+                                    {
+                                        Console.Write(parsed[p] + "^.^");
+                                    }
+                                    Console.WriteLine("---------------------------------------------------");
+                                    for (int p = 0; p < parsed.Length; p++)
+                                    {
+                                        parsed[p] = ParseToken(ref parsed, p);
+                                    }
+                                    for (int p = 0; p < parsed.Length; p++)
+                                    {
+                                        if (parsed[p] != @"")
+                                        {
+                                            new_tekst += parsed[p];
+                                        }
+                                    }
+                                    new_tekst += "$$";
+                                    /////////////////////////////////////////////////////////////////////////////////////
+                                    file.WriteLine(tekst);
+                                    if (clipboard_memory.CompareTo("") != 0)
+                                    {
+                                        Clipboard.SetText(clipboard_memory);
+                                    }
+                                    else
+                                    {
+                                        Clipboard.Clear();
+                                    }
+
+                                    //removing text from start to end
+
+                                    int start = currentEquation.Range.Start;
+                                    int end = currentEquation.Range.End;
+                                    currentEquation.Range.Application.Selection.Delete();
+
+                                    if (new_tekst != "$$$$")
+                                    {
+                                        currentEquation.Range.InsertBefore(new_tekst);
+                                    }
                                 }
-                                else
-                                {
-                                    Clipboard.Clear();
-                                }
-
-                                //removing text from start to end
-
-                                int start = currentEquation.Range.Start;
-                                int end = currentEquation.Range.End;
-                                currentEquation.Range.Application.Selection.Delete();
-
-                                if(new_tekst != "$$$$")
-                                {
-                                    currentEquation.Range.InsertBefore(new_tekst);
-                                }
-
                             });
             
                             staThread.SetApartmentState(ApartmentState.STA);
                             staThread.Start();
                             staThread.Join();
                             form.progressBar1.PerformStep();
+                            if (break_for_fl)
+                                break;
                         }
                     }
                 }
@@ -413,7 +437,7 @@ namespace MathTypeProject
             }
             else if (additional_signs_count == 3)
             {
-                while(parsed[temp_idx] != " ")
+                while(temp_idx >= 0 && parsed[temp_idx] != " ")
                 {
                     temp_idx--;
                 }
@@ -968,8 +992,17 @@ namespace MathTypeProject
 
         private string ParseBigCurly(ref string[] parsed, int index)
         {
-            parsed[index - 1] = @"";
-            parsed[index] = @"\begin{cases} ";
+            bool curly_fl = false;
+            if(index != 0 && parsed[index - 1] == @"\{")
+            {
+                parsed[index - 1] = @"";
+                parsed[index] = @"\begin{cases} ";
+                curly_fl = true;
+            }
+            else
+            {
+                parsed[index] = @"";
+            }
             parsed[index + 1] = @"";
             int temp_idx = index + 2;
             int par_count = 1;
@@ -1011,9 +1044,13 @@ namespace MathTypeProject
                 }
                 temp_idx++;
             }
-            parsed[index] += @" \end{cases}";
+            if (curly_fl)
+            {
+                parsed[index] += @" \end{cases}";
+                parsed[temp_idx] = @"";
+            }
             parsed[temp_idx - 1] = @"";
-            parsed[temp_idx] = @"";
+            
             return parsed[index];
         }
 
