@@ -190,36 +190,36 @@ namespace MathTypeProject
                             staThread.Start();
                             staThread.Join();
                             form.progressBar1.PerformStep();
-                            }
                         }
                     }
-                    else
-                    {
-                        MessageBox.Show("No equations found.");
-                    }
+                }
+                else
+                {
+                    MessageBox.Show("No equations found.");
+                }
 
-					if (form.checkBox2.Checked == false)
-					{
-						docOpen.SaveAs(second_file_path);
-					}
-					else
-					{
-						docOpen.SaveAs();
-					}
-					docOpen.Close();
-					app.Quit();
+				    if (form.checkBox2.Checked == false)
+					 {
+						  docOpen.SaveAs(second_file_path);
+					 }
+					 else
+					 {
+				        docOpen.SaveAs();
+					 }
+					 docOpen.Close();
+					 app.Quit();
 
-                    string final_message = "Process Completed\n\n";
-                    if(packages.Count != 0)
+                string final_message = "Process Completed\n\n";
+                if(packages.Count != 0)
+                {
+                    final_message += "Additional packages required for further use:\n";
+                    foreach (string pack in packages)
                     {
-                        final_message += "Additional packages required for further use:\n";
-                        foreach (string pack in packages)
-                        {
-                            final_message += pack;
-                            final_message += "\n";
-                        }
+                        final_message += pack;
+                        final_message += "\n";
                     }
-                    MessageBox.Show(final_message);
+                }
+                MessageBox.Show(final_message);
 
             }
             catch (Exception)
