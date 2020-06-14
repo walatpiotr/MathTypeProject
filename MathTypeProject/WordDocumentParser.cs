@@ -541,7 +541,7 @@ namespace MathTypeProject
         {
             bool changed_to_function = false;
             int letters_left = parsed.Length - (index + 1);
-            if (index == 0 || !(Char.IsLetter(parsed[index-1].ToCharArray()[0])))
+            if (index == 0 || parsed[index-1] == @"" || !(Char.IsLetter(parsed[index-1].ToCharArray()[0])))
             {
                 if (letters_left >= 2)
                 {
