@@ -207,8 +207,8 @@ namespace MathTypeProject
             unicodeToLatex.Add('┴', "text above");  //requires additional definitions
             unicodeToLatex.Add('┬', "text below");  //requires additional definitions
             unicodeToLatex.Add('┤', @"");
-            unicodeToLatex.Add('≝', @"=");  //requires additional definitions
-            unicodeToLatex.Add('≞', @"=");  //requires additional definitions
+            unicodeToLatex.Add('≝', @"\overset{def}{=}");
+            unicodeToLatex.Add('≞', @"\overset{m}{=}");
             unicodeToLatex.Add('{', @"\{");
             unicodeToLatex.Add('}', @"\}");
             unicodeToLatex.Add('〈', @"\langle ");

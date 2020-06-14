@@ -251,6 +251,7 @@ namespace MathTypeProject
                     string final_eq_file_path = this.inputFileDir + @"\EquationsFile.txt";
                     using (System.IO.StreamWriter file2 = File.AppendText(final_eq_file_path))
                     {
+                        file2.WriteLine("\n" + @"\usepackage{amsmath}");
                         foreach (string pack in packages)
                         {
                             final_message += pack;
@@ -540,164 +541,167 @@ namespace MathTypeProject
         {
             bool changed_to_function = false;
             int letters_left = parsed.Length - (index + 1);
-            if(letters_left >= 2)
+            if (index == 0 || !(Char.IsLetter(parsed[index-1].ToCharArray()[0])))
             {
-                switch (parsed[index])
+                if (letters_left >= 2)
                 {
-                    case "c":   //cos, cosh, cot, coth, csc, csch
-                        if (parsed[index + 1] == "o")
-                        {
-                            if (parsed[index + 2] == "s")
+                    switch (parsed[index])
+                    {
+                        case "c":   //cos, cosh, cot, coth, csc, csch
+                            if (parsed[index + 1] == "o")
+                            {
+                                if (parsed[index + 2] == "s")
+                                {
+                                    if (letters_left > 2 && parsed[index + 3] == "h")
+                                    {
+                                        changed_to_function = true;
+                                        parsed[index] = @"\cosh";
+                                        parsed[index + 3] = @"";
+                                    }
+                                    else
+                                    {
+                                        changed_to_function = true;
+                                        parsed[index] = @"\cos";
+                                    }
+                                    parsed[index + 1] = @"";
+                                    parsed[index + 2] = @"";
+                                }
+                                else if (parsed[index + 2] == "t")
+                                {
+                                    if (letters_left > 2 && parsed[index + 3] == "h")
+                                    {
+                                        changed_to_function = true;
+                                        parsed[index] = @"\coth";
+                                        parsed[index + 3] = @"";
+                                    }
+                                    else
+                                    {
+                                        changed_to_function = true;
+                                        parsed[index] = @"\cot";
+                                    }
+                                    parsed[index + 1] = @"";
+                                    parsed[index + 2] = @"";
+                                }
+                            }
+                            else if (parsed[index + 1] == "s" && parsed[index + 2] == "c")
                             {
                                 if (letters_left > 2 && parsed[index + 3] == "h")
                                 {
                                     changed_to_function = true;
-                                    parsed[index] = @"\cosh";
+                                    parsed[index] = @"\text{csch}";
                                     parsed[index + 3] = @"";
                                 }
                                 else
                                 {
                                     changed_to_function = true;
-                                    parsed[index] = @"\cos";
+                                    parsed[index] = @"\csc";
                                 }
                                 parsed[index + 1] = @"";
                                 parsed[index + 2] = @"";
                             }
-                            else if(parsed[index + 2] == "t")
+                            break;
+                        case "l":   //lim, ln, log
+                            if (parsed[index + 1] == "i" && parsed[index + 2] == "m")
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\lim";
+                                parsed[index + 1] = @"";
+                                parsed[index + 2] = @"";
+                            }
+                            else if (parsed[index + 1] == "n")
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\ln";
+                                parsed[index + 1] = @"";
+                            }
+                            else if (parsed[index + 1] == "o" && parsed[index + 2] == "g")
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\log";
+                                parsed[index + 1] = @"";
+                                parsed[index + 2] = @"";
+                            }
+                            break;
+                        case "m":   //max, min
+                            if (parsed[index + 1] == "a" && parsed[index + 2] == "x")
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\max";
+                                parsed[index + 1] = @"";
+                                parsed[index + 2] = @"";
+                            }
+                            else if (parsed[index + 1] == "i" && parsed[index + 2] == "n")
+                            {
+                                changed_to_function = true;
+                                parsed[index] = @"\min";
+                                parsed[index + 1] = @"";
+                                parsed[index + 2] = @"";
+                            }
+                            break;
+                        case "s":   //sec, sech, sin, sinh
+                            if (parsed[index + 1] == "i" && parsed[index + 2] == "n")
                             {
                                 if (letters_left > 2 && parsed[index + 3] == "h")
                                 {
                                     changed_to_function = true;
-                                    parsed[index] = @"\coth";
+                                    parsed[index] = @"\sinh";
                                     parsed[index + 3] = @"";
                                 }
                                 else
                                 {
                                     changed_to_function = true;
-                                    parsed[index] = @"\cot";
+                                    parsed[index] = @"\sin";
                                 }
                                 parsed[index + 1] = @"";
                                 parsed[index + 2] = @"";
                             }
-                        }
-                        else if (parsed[index + 1] == "s" && parsed[index + 2] == "c")
-                        {
-                            if (letters_left > 2 && parsed[index + 3] == "h")
+                            else if (parsed[index + 1] == "e" && parsed[index + 2] == "c")
                             {
-                                changed_to_function = true;
-                                parsed[index] = @"\text{csch}";
-                                parsed[index + 3] = @"";
+                                if (letters_left > 2 && parsed[index + 3] == "h")
+                                {
+                                    changed_to_function = true;
+                                    parsed[index] = @"\text{sech}";
+                                    parsed[index + 3] = @"";
+                                }
+                                else
+                                {
+                                    changed_to_function = true;
+                                    parsed[index] = @"\sec";
+                                }
+                                parsed[index + 1] = @"";
+                                parsed[index + 2] = @"";
                             }
-                            else
+                            break;
+                        case "t":   //tan, tanh
+                            if (parsed[index + 1] == "a" && parsed[index + 2] == "n")
                             {
-                                changed_to_function = true;
-                                parsed[index] = @"\csc";
+                                if (letters_left > 2 && parsed[index + 3] == "h")
+                                {
+                                    changed_to_function = true;
+                                    parsed[index] = @"\tanh";
+                                    parsed[index + 3] = @"";
+                                }
+                                else
+                                {
+                                    changed_to_function = true;
+                                    parsed[index] = @"\tan";
+                                }
+                                parsed[index + 1] = @"";
+                                parsed[index + 2] = @"";
                             }
-                            parsed[index + 1] = @"";
-                            parsed[index + 2] = @"";
-                        }
-                        break;
-                    case "l":   //lim, ln, log
-                        if (parsed[index + 1] == "i" && parsed[index + 2] == "m")
-                        {
-                            changed_to_function = true;
-                            parsed[index] = @"\lim";
-                            parsed[index + 1] = @"";
-                            parsed[index + 2] = @"";
-                        }
-                        else if (parsed[index + 1] == "n")
-                        {
-                            changed_to_function = true;
-                            parsed[index] = @"\ln";
-                            parsed[index + 1] = @"";
-                        }
-                        else if (parsed[index + 1] == "o" && parsed[index + 2] == "g")
-                        {
-                            changed_to_function = true;
-                            parsed[index] = @"\log";
-                            parsed[index + 1] = @"";
-                            parsed[index + 2] = @"";
-                        }
-                        break;
-                    case "m":   //max, min
-                        if (parsed[index + 1] == "a" && parsed[index + 2] == "x")
-                        {
-                            changed_to_function = true;
-                            parsed[index] = @"\max";
-                            parsed[index + 1] = @"";
-                            parsed[index + 2] = @"";
-                        }
-                        else if (parsed[index + 1] == "i" && parsed[index + 2] == "n")
-                        {
-                            changed_to_function = true;
-                            parsed[index] = @"\min";
-                            parsed[index + 1] = @"";
-                            parsed[index + 2] = @"";
-                        }
-                        break;
-                    case "s":   //sec, sech, sin, sinh
-                        if (parsed[index + 1] == "i" && parsed[index + 2] == "n")
-                        {
-                            if (letters_left > 2 && parsed[index + 3] == "h")
-                            {
-                                changed_to_function = true;
-                                parsed[index] = @"\sinh";
-                                 parsed[index + 3] = @"";
-                            }
-                            else
-                            {
-                                changed_to_function = true;
-                                parsed[index] = @"\sin";
-                            }
-                            parsed[index + 1] = @"";
-                            parsed[index + 2] = @"";
-                        }
-                        else if (parsed[index + 1] == "e" && parsed[index + 2] == "c")
-                        {
-                            if (letters_left > 2 && parsed[index + 3] == "h")
-                            {
-                                changed_to_function = true;
-                                parsed[index] = @"\text{sech}";
-                                parsed[index + 3] = @"";
-                            }
-                            else
-                            {
-                                changed_to_function = true;
-                                parsed[index] = @"\sec";
-                            }
-                            parsed[index + 1] = @"";
-                            parsed[index + 2] = @"";
-                        }
-                        break;
-                    case "t":   //tan, tanh
-                        if (parsed[index + 1] == "a" && parsed[index + 2] == "n")
-                        {
-                            if (letters_left > 2 && parsed[index + 3] == "h")
-                            {
-                                changed_to_function = true;
-                                parsed[index] = @"\tanh";
-                                parsed[index + 3] = @"";
-                            }
-                            else
-                            {
-                                changed_to_function = true;
-                                parsed[index] = @"\tan";
-                            }
-                            parsed[index + 1] = @"";
-                            parsed[index + 2] = @"";
-                        }
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
-            else if (letters_left == 1)
-            {
-                if(parsed[index] == "l" && parsed[index+1] == "n")
+                else if (letters_left == 1)
                 {
-                    changed_to_function = true;
-                    parsed[index] = @"\ln";
-                    parsed[index + 1] = @"";
+                    if (parsed[index] == "l" && parsed[index + 1] == "n")
+                    {
+                        changed_to_function = true;
+                        parsed[index] = @"\ln";
+                        parsed[index + 1] = @"";
+                    }
                 }
             }
 
@@ -971,6 +975,7 @@ namespace MathTypeProject
             }
             else if (index + 6 < parsed.Length && parsed[index+1] == "(")
             {
+                parsed[index + 1] = @"";
                 int par_count = 1;
                 int temp_idx = index + 2;
 
@@ -986,11 +991,15 @@ namespace MathTypeProject
                     }
                     else if (parsed[temp_idx] == "text above" || parsed[temp_idx] == "text below")
                     {
-                        parsed[temp_idx] = ParseAboveBelow(ref parsed, temp_idx);
-                        break;
+                        parsed[temp_idx] = ParseAboveBelow(ref parsed, temp_idx, true);
+                    }
+                    else
+                    {
+                        parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
                     }
                     temp_idx++;
                 }
+                parsed[temp_idx - 1] = @"";
 
                 parsed[index] = @"";
             }
@@ -1001,9 +1010,82 @@ namespace MathTypeProject
             return parsed[index];
         }
 
-        private string ParseAboveBelow(ref string[] parsed, int index)
+        private string ParseAboveBelow(ref string[] parsed, int index, bool in_par)
         {
-            return "lol";
+            string ending = @"{";
+            string middle = @"";
+            if (parsed[index] == "text above")
+            {
+                parsed[index] = @"\overset{";
+            }
+            else if (parsed[index] == "text below")
+            {
+                parsed[index] = @"\underset{";
+            }
+
+            if(index != 0)
+            {
+                int temp_idx = index - 1;
+                while(temp_idx > 0 && parsed[temp_idx] == @"")
+                {
+                    temp_idx--;
+                }
+                ending += parsed[temp_idx];
+                parsed[temp_idx] = @"";
+            }
+            ending += @"}";
+
+            if(index != parsed.Length - 1 && parsed[index+1] == "(")
+            {
+                parsed[index + 1] = @"";
+                int temp_idx = index + 2;
+                int par_count = 1;
+                while (!(par_count == 1 && parsed[temp_idx] == ")"))
+                {
+                    if (parsed[temp_idx] == "(")
+                    {
+                        par_count++;
+                    }
+                    else if (parsed[temp_idx] == ")")
+                    {
+                        par_count--;
+                    }
+                    else
+                    {
+                        parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
+                    }
+                    temp_idx++;
+                }
+                for (int i = index + 2; i < temp_idx; i++)
+                {
+                    middle += parsed[i];
+                    parsed[i] = @"";
+                }
+                parsed[temp_idx] = @"";
+            }
+            else if (in_par)
+            {
+                int temp_idx = index;
+                while(temp_idx < parsed.Length && parsed[temp_idx] != ")")
+                {
+                    parsed[temp_idx] = ParseToken(ref parsed, temp_idx);
+                    temp_idx++;
+                }
+                for(int i = index + 1; i < temp_idx; i++)
+                {
+                    middle += parsed[i];
+                    parsed[i] = @"";
+                }
+            }
+            else
+            {
+                middle = ParseToken(ref parsed, index + 1);
+                parsed[index + 1] = @"";
+            }
+            middle += @"}";
+
+            parsed[index] = parsed[index] + middle + ending;
+            return parsed[index];
         }
 
         private string ParseBigCurly(ref string[] parsed, int index)
@@ -1121,6 +1203,10 @@ namespace MathTypeProject
             else if (parsed[index] == "expect big curly")
             {
                 return ParseBigCurly(ref parsed, index);
+            }
+            else if (parsed[index] == "text above" || parsed[index] == "text below")
+            {
+                return ParseAboveBelow(ref parsed, index, false);
             }
             else if (BackwardsRequired(parsed[index]))
             {
