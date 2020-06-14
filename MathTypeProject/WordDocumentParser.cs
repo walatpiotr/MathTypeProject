@@ -119,13 +119,17 @@ namespace MathTypeProject
 
                 if (OMathsCount > 0)
                 {
+                    string final_eq_file_path_clear = this.inputFileDir + @"\EquationsFile.txt";
+                    File.WriteAllText(final_eq_file_path_clear, String.Empty);
+
                     string temp_file_path = this.inputFileDir + @"\EquationTemporaryFile.txt";
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(temp_file_path))
+                    
                     {
                         int offset = 1;
                         bool empty_eq_fl;
                         bool break_for_fl = false;
-                        for(int i=0; i < OMathsCount && offset <= myRange.OMaths.Count; i++)
+                        for (int i = 0; i < OMathsCount && offset <= myRange.OMaths.Count; i++)
                         {
                             empty_eq_fl = true;
                             Thread staThread = new Thread(
@@ -160,9 +164,9 @@ namespace MathTypeProject
                                 }
                                 if (!break_for_fl)
                                 {
-                                    currentEquation.Range.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
+                                    //currentEquation.Range.Application.Selection.Range.HighlightColorIndex = Word.WdColorIndex.wdYellow;
                                     String tekst = Clipboard.GetText();
-                                    String new_tekst = "$$";
+                                    String new_tekst = "$";
                                     /////////////////////////////////////////////////////////////////////////////////////
 
                                     char[] tokens = tekst.ToCharArray();
@@ -183,9 +187,16 @@ namespace MathTypeProject
                                             new_tekst += parsed[p];
                                         }
                                     }
-                                    new_tekst += "$$";
+                                    new_tekst += "$";
                                     /////////////////////////////////////////////////////////////////////////////////////
                                     file.WriteLine(tekst);
+
+                                    string final_eq_file_path = this.inputFileDir + @"\EquationsFile.txt";
+                                    using (System.IO.StreamWriter file2 = File.AppendText(final_eq_file_path))
+                                    {
+                                        file2.WriteLine(new_tekst);
+                                    }
+
                                     if (clipboard_memory.CompareTo("") != 0)
                                     {
                                         Clipboard.SetText(clipboard_memory);
@@ -201,13 +212,13 @@ namespace MathTypeProject
                                     int end = currentEquation.Range.End;
                                     currentEquation.Range.Application.Selection.Delete();
 
-                                    if (new_tekst != "$$$$")
+                                    if (new_tekst != "$$")
                                     {
                                         currentEquation.Range.InsertBefore(new_tekst);
                                     }
                                 }
                             });
-            
+
                             staThread.SetApartmentState(ApartmentState.STA);
                             staThread.Start();
                             staThread.Join();
@@ -233,14 +244,19 @@ namespace MathTypeProject
 					 docOpen.Close();
 					 app.Quit();
 
-                string final_message = "Process Completed\n\n";
+                string final_message = "Process Completed\n\nFile \"EquationsFile.txt\" containing all converted equations and needed packages.\n";
                 if(packages.Count != 0)
                 {
                     final_message += "Additional packages required for further use:\n";
-                    foreach (string pack in packages)
+                    string final_eq_file_path = this.inputFileDir + @"\EquationsFile.txt";
+                    using (System.IO.StreamWriter file2 = File.AppendText(final_eq_file_path))
                     {
-                        final_message += pack;
-                        final_message += "\n";
+                        foreach (string pack in packages)
+                        {
+                            final_message += pack;
+                            final_message += "\n";
+                            file2.WriteLine(pack);
+                        }
                     }
                 }
                 MessageBox.Show(final_message);
