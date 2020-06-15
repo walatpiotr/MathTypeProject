@@ -8,3 +8,5 @@ On default the program makes a copy of your file, if you want to convert in plac
 If you want to see how the program processes your document, check "Show application progress" checkbox.
 
 In order for the program to work properly, do not use clipboard or the instance of MS Word opened by the app while it's running.
+
+Besides the converted word file, the program creates EquationsFile.txt, in which the Latex code of all equations and required package imports are stored.
